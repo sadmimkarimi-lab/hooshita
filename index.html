@@ -55,21 +55,21 @@
     }
 
     .pill-btn {
-      border: none;
+      border: 1px solid #e5e7eb;
       border-radius: 999px;
       padding: 6px 14px;
       font-size: 12px;
       cursor: pointer;
-      background: #ffffff;
+      background: #eef2ff; /* پس‌زمینه ملایم */
       color: #0f172a;
-      box-shadow: 0 4px 10px rgba(15, 23, 42, 0.08);
+      box-shadow: 0 4px 10px rgba(15, 23, 42, 0.06);
       transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
       white-space: nowrap;
     }
     .pill-btn:hover {
       transform: translateY(-1px);
       box-shadow: 0 8px 18px rgba(15, 23, 42, 0.12);
-      background: #f9fafb;
+      background: #e0e7ff;
     }
 
     .logo {
@@ -308,6 +308,11 @@
       background: #fef3c7;
       color: #92400e;
     }
+    .stat-pill.timer-pill {
+      background: #fee2e2;
+      color: #b91c1c;
+      font-weight: 600;
+    }
     .stat-pill .icon {
       font-size: 22px;
     }
@@ -378,28 +383,31 @@
     }
     .option-btn {
       border-radius: 999px;
-      border: none;
+      border: 1px solid #e5e7eb; /* حاشیه ظریف برای تفکیک */
       padding: 10px 14px;
       font-size: 14px;
       background: #f9fafb;
       color: #111827;
       text-align: center;
       cursor: pointer;
-      transition: background 0.14s ease, transform 0.12s ease, box-shadow 0.12s ease;
+      transition: background 0.14s ease, transform 0.12s ease, box-shadow 0.12s ease, border-color 0.12s ease;
       box-shadow: 0 4px 10px rgba(15, 23, 42, 0.04);
     }
     .option-btn:hover {
       background: #e5e7eb;
+      border-color: #c7d2fe;
       transform: translateY(-1px);
       box-shadow: 0 6px 14px rgba(15, 23, 42, 0.08);
     }
     .option-btn.correct {
       background: #bbf7d0;
       color: #065f46;
+      border-color: #4ade80;
     }
     .option-btn.wrong {
       background: #fecaca;
       color: #7f1d1d;
+      border-color: #fca5a5;
     }
 
     .progress-bar-wrap {
@@ -515,7 +523,7 @@
         <div class="header-title-wrap">
           <div class="header-title">
             <h1>بازی هوشیتا</h1>
-            <p>ذهنت رو به چالش بکش و ببین تا کجا می‌تونی پیش بری...</p>
+            <p>ذهنت رو به چالش بکش...</p>
           </div>
           <div class="user-box">
             <div>نام کاربر: <span id="userName">الهه</span></div>
@@ -570,7 +578,7 @@
         <span>جان:</span>
         <span id="heartsCount">3</span>
       </div>
-      <div class="stat-pill">
+      <div class="stat-pill timer-pill">
         ⏱ زمان باقیمانده:
         <span id="timerValue">-- ثانیه</span>
       </div>
@@ -791,9 +799,6 @@
     state.hearts = 3;
     state.gameStars = 0;
 
-    currentGameLabel.textContent = game.title;
-    currentStageLabel.textContent = `1 از ${game.stages.length}`;
-
     gameTitleEl.textContent = game.title;
     gameSubtitleEl.textContent = game.subtitle;
     coachImgEl.src = game.coachImg;
@@ -825,7 +830,7 @@
   }
 
   function updateTimerLabel() {
-    timerValueEl.textContent = `${timerRemaining} ثانیه`;
+    timerValueEl.textContent = `${timerRemaining} ثانیه ⏳`;
   }
 
   // ---- آپدیت UI بازی ----
@@ -837,13 +842,16 @@
     const currentStageIndex = Math.max(0, Math.min(state.currentStage, stageCount - 1));
     const stageData = game.stages[currentStageIndex];
 
+    // وضعیت عمومی بالای صفحه
+    currentGameLabel.textContent = game.title;
+    currentStageLabel.textContent = `${currentStageIndex + 1} از ${stageCount}`;
+
     heartsCountEl.textContent = state.hearts.toString();
     gameStarsEl.textContent = state.gameStars.toString();
 
     stageNumberTop.textContent = (currentStageIndex + 1).toString();
     stageTotalTop.textContent = stageCount.toString();
 
-    currentStageLabel.textContent = `${currentStageIndex + 1} از ${stageCount}`;
     stageLabelBottom.textContent = `مرحله ${currentStageIndex + 1} از ${stageCount}`;
 
     const progress = (currentStageIndex / stageCount) * 100;
@@ -908,7 +916,7 @@
       setTimeout(() => {
         if (state.hearts <= 0) {
           showModal("جان‌هات تموم شد 😅",
-            "نگران نباش؛ می‌تونی با دکمه «شروع مجدد بازی» همین بازی رو دوباره از اول شروع کنی.");
+            "نگران نباش؛ می‌تونی با دکمه «شروع مجدد بازی» کل بازی رو از اول شروع کنی.");
           resetCurrentGameOnly();
         } else {
           updateGameUi();
@@ -929,7 +937,7 @@
     setTimeout(() => {
       if (state.hearts <= 0) {
         showModal("زمانت تموم شد 😅",
-          "همه‌ی جان‌هات رفت. با «شروع مجدد بازی» می‌تونی دوباره تلاش کنی.");
+          "همه‌ی جان‌هات رفت. با «شروع مجدد بازی» می‌تونی کل بازی رو از صفر شروع کنی.");
         resetCurrentGameOnly();
       } else {
         updateGameUi();
@@ -960,10 +968,10 @@
     const currentIndex = gamesData.findIndex(g => g.id === state.currentGameId);
     if (currentIndex >= 0 && currentIndex < gamesData.length - 1) {
       const nextGame = gamesData[currentIndex + 1];
-      if (nextGame && nextGame.locked) {
+      if (nextGame) {
         nextGame.locked = false;
+        state.unlockedGames.add(nextGame.id);
       }
-      state.unlockedGames.add(nextGame.id);
       renderGamesList();
     }
   }
@@ -972,6 +980,28 @@
     totalStarsEl.textContent = state.totalStars.toString();
     gameStarsEl.textContent = state.gameStars.toString();
     heartsCountEl.textContent = state.hearts.toString();
+  }
+
+  // ---- ریست کامل بازی ----
+  function resetAllGameProgress() {
+    clearInterval(timerInterval);
+    state.totalStars = 0;
+    state.unlockedGames = new Set([1]);
+    state.currentGameId = null;
+    state.currentStage = 0;
+    state.hearts = 3;
+    state.gameStars = 0;
+
+    gamesData.forEach((g, index) => {
+      if (index === 0) {
+        g.locked = false;
+      } else {
+        g.locked = true;
+      }
+    });
+
+    updateGlobalStats();
+    backToList();
   }
 
   // ---- برگشت به فهرست ----
@@ -986,18 +1016,8 @@
   }
   backToListBtn.addEventListener("click", backToList);
 
-  // ---- شروع مجدد از فوتر ----
-  restartBtn.addEventListener("click", () => {
-    clearInterval(timerInterval);
-    if (!state.currentGameId) {
-      const firstId = [...state.unlockedGames].sort((a,b)=>a-b)[0];
-      startGame(firstId);
-    } else {
-      resetCurrentGameOnly();
-      gamesScreen.classList.add("hidden");
-      gameScreen.classList.remove("hidden");
-    }
-  });
+  // ---- شروع مجدد از فوتر (ریست کامل) ----
+  restartBtn.addEventListener("click", resetAllGameProgress);
 
   // ---- پاپ‌آپ‌ها ----
   function showModal(title, body) {
@@ -1017,21 +1037,31 @@
     const unlockedCount = state.unlockedGames.size;
     showModal(
       "دستاوردهای تو 🏆",
-      `امتیاز کل: ${state.totalStars}\n\nبازی‌های باز شده: ${unlockedCount} از ۶\n\nهرچی جلوتر بری، ستاره‌ها و بازی‌های بیشتری برات باز می‌شه.`
+      `🌟 امتیاز کل: ${state.totalStars}\n` +
+      `🎮 بازی‌های باز شده: ${unlockedCount} از ۶\n\n` +
+      `✅ هر بازی رو کامل کنی، بازی بعدی برات باز می‌شه.\n` +
+      `⭐ هر جواب درست = یک ستاره‌ی جدید در امتیاز کل.\n` +
+      `🔥 سعی کن با جان‌های کمتر از دست‌رفته، رکورد خودت رو بشکنی.`
     );
   });
 
   helpBtn.addEventListener("click", () => {
     showModal(
       "راهنمای بازی",
-      "۱) از فهرست، یک بازی رو انتخاب کن.\n۲) در هر مرحله، جواب درست رو انتخاب کن.\n۳) هر جواب درست = یک ستاره.\n۴) با سه اشتباه یا اتمام زمان، جان‌ها تموم می‌شن و بازی از اول شروع می‌شه.\n۵) با تمام کردن هر بازی، بازی بعدی باز می‌شه."
+      "۱) از فهرست، یک بازی رو انتخاب کن.\n" +
+      "۲) در هر مرحله، جواب درست رو انتخاب کن.\n" +
+      "۳) هر جواب درست = یک ستاره.\n" +
+      "۴) با سه اشتباه یا اتمام زمان، جان‌ها تموم می‌شن و بازی از اول شروع می‌شه.\n" +
+      "۵) با تمام کردن هر بازی، بازی بعدی باز می‌شه.\n" +
+      "۶) اگر خواستی همه‌چیز رو از صفر شروع کنی، از دکمه «شروع مجدد بازی» استفاده کن."
     );
   });
 
   aboutBtn.addEventListener("click", () => {
     showModal(
       "درباره تاویتا",
-      "بازی‌های هوشیتا برای تمرین مغز، تمرکز، سرعت ذهن و حافظه طراحی شده.\nاین برنامه توسط تیم تاویتا ساخته شده تا تمرین، شبیه یک بازی قشنگ و دوست‌داشتنی باشه."
+      "بازی‌های هوشیتا برای تمرین مغز، تمرکز، سرعت ذهن و حافظه طراحی شده.\n" +
+      "این برنامه توسط تیم تاویتا ساخته شده تا تمرین، شبیه یک بازی قشنگ و دوست‌داشتنی باشه."
     );
   });
 
