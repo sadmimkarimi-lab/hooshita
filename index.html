@@ -26,9 +26,10 @@
       padding: 16px 20px;
       margin-bottom: 16px;
     }
-    /* هدر رنگی */
+
+    /* هدر با گرادینت دلبرتر */
     .header-card {
-      background: linear-gradient(135deg, #eef2ff, #e0f2fe);
+      background: linear-gradient(135deg, #e0e7ff, #fce7f3);
     }
 
     /* -------- هدر -------- */
@@ -59,7 +60,7 @@
       padding: 6px 14px;
       font-size: 12px;
       cursor: pointer;
-      background: #eef2ff; /* پس‌زمینه ملایم */
+      background: #eef2ff;
       color: #0f172a;
       box-shadow: 0 4px 10px rgba(15, 23, 42, 0.06);
       transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
@@ -127,7 +128,7 @@
       gap: 8px;
       justify-content: space-between;
       margin-bottom: 4px;
-      padding: 6px 10px; /* باریک‌تر */
+      padding: 6px 10px;
       align-items: center;
     }
     .status-pill {
@@ -260,14 +261,14 @@
       font-size: 12px;
       cursor: pointer;
       color: #374151;
-      order: 1; /* سمت چپ */
+      order: 1;
     }
 
     .game-title-area {
       display: flex;
       flex-direction: column;
       align-items: flex-start;
-      order: 0; /* سمت راست */
+      order: 0;
     }
     .game-main-title {
       font-size: 18px;
@@ -363,6 +364,19 @@
       color: #374151;
     }
 
+    /* آواتار بزرگ بازیکن در صفحه بازی */
+    .player-avatar {
+      margin-top: 14px;
+      display: flex;
+      justify-content: flex-start;
+    }
+    .player-avatar img {
+      width: 150px;
+      max-width: 45%;
+      height: auto;
+      display: block;
+    }
+
     .question-block {
       margin-top: 18px;
       font-size: 15px;
@@ -382,7 +396,7 @@
     }
     .option-btn {
       border-radius: 999px;
-      border: 1px solid #e5e7eb; /* حاشیه ظریف برای تفکیک */
+      border: 1px solid #e5e7eb;
       padding: 10px 14px;
       font-size: 14px;
       background: #f9fafb;
@@ -411,7 +425,7 @@
 
     .progress-bar-wrap {
       margin-top: 14px;
-      height: 14px;          /* نوار جون پهن‌تر */
+      height: 14px;
       width: 100%;
       background: #e5e7eb;
       border-radius: 999px;
@@ -552,6 +566,7 @@
       gap: 10px;
       margin-bottom: 12px;
       justify-content: center;
+      flex-wrap: wrap;
     }
     .avatar-choice {
       border-radius: 16px;
@@ -673,6 +688,11 @@
       </div>
     </div>
 
+    <!-- آواتار انتخابی بازیکن -->
+    <div class="player-avatar">
+      <img id="playerAvatar" src="https://cdnfa.com/irangiah/a9be/uploads/new6/picsart-25-11-16-05-56-36-511.png" alt="آواتار بازیکن">
+    </div>
+
     <div class="question-block" id="questionText"></div>
 
     <div class="options" id="optionsContainer"></div>
@@ -710,16 +730,29 @@
     <h3>شروع بازی هوشیتا 🎮</h3>
     <p>اول اسمت رو بنویس و یکی از کاراکترهای تاویتا رو انتخاب کن. هر وقت برگشتی، از همین‌جا ادامه می‌دی.</p>
     <input id="onboardNameInput" class="onboard-input" type="text" placeholder="مثلاً الهه">
+
     <div class="avatar-choices">
       <button type="button" class="avatar-choice selected"
-              data-avatar="https://cdnfa.com/irangiah/a9be/uploads/new6/picsart-25-11-16-05-13-10-261.png">
-        <img src="https://cdnfa.com/irangiah/a9be/uploads/new6/picsart-25-11-16-05-13-10-261.png" alt="کاراکتر ۱">
+              data-avatar="https://cdnfa.com/irangiah/a9be/uploads/new6/picsart-25-11-16-05-56-36-511.png">
+        <img src="https://cdnfa.com/irangiah/a9be/uploads/new6/picsart-25-11-16-05-56-36-511.png" alt="کاراکتر ۱">
       </button>
+
       <button type="button" class="avatar-choice"
-              data-avatar="https://cdnfa.com/irangiah/a9be/uploads/new6/picsart-25-11-16-06-01-08-979.png">
-        <img src="https://cdnfa.com/irangiah/a9be/uploads/new6/picsart-25-11-16-06-01-08-979.png" alt="کاراکتر ۲">
+              data-avatar="https://cdnfa.com/irangiah/a9be/uploads/new6/picsart-25-11-16-05-56-14-607.png">
+        <img src="https://cdnfa.com/irangiah/a9be/uploads/new6/picsart-25-11-16-05-56-14-607.png" alt="کاراکتر ۲">
+      </button>
+
+      <button type="button" class="avatar-choice"
+              data-avatar="https://cdnfa.com/irangiah/a9be/uploads/new6/picsart-25-11-16-05-55-52-957.png">
+        <img src="https://cdnfa.com/irangiah/a9be/uploads/new6/picsart-25-11-16-05-55-52-957.png" alt="کاراکتر ۳">
+      </button>
+
+      <button type="button" class="avatar-choice"
+              data-avatar="https://cdnfa.com/irangiah/a9be/uploads/new6/picsart-25-11-16-05-12-45-646.png">
+        <img src="https://cdnfa.com/irangiah/a9be/uploads/new6/picsart-25-11-16-05-12-45-646.png" alt="کاراکتر ۴">
       </button>
     </div>
+
     <button id="onboardConfirmBtn" class="onboard-confirm">بزن بریم 😍</button>
   </div>
 </div>
@@ -824,6 +857,8 @@
   const coachImgEl = document.getElementById("coachImg");
   const coachTextEl = document.getElementById("coachText");
 
+  const playerAvatarEl = document.getElementById("playerAvatar");
+
   const heartsCountEl = document.getElementById("heartsCount");
   const gameStarsEl = document.getElementById("gameStars");
   const starStatEl = document.getElementById("starStat");
@@ -885,6 +920,9 @@
         localStorage.setItem(AVATAR_KEY, selectedAvatarUrl);
       }
     } catch (e) {}
+    if (selectedAvatarUrl) {
+      playerAvatarEl.src = selectedAvatarUrl;
+    }
     hideOnboarding();
     renderGamesList();
   });
@@ -898,7 +936,12 @@
         userNameEl.textContent = savedName;
       }
       if (savedAvatar) {
-        // فعلاً فقط نگه می‌داریم؛ بعداً می‌تونیم تو هدر یا جایی نمایش بدیم
+        selectedAvatarUrl = savedAvatar;
+        playerAvatarEl.src = savedAvatar;
+      } else {
+        // اگر آواتار ذخیره نشده بود، از اولین گزینه استفاده کن
+        selectedAvatarUrl = avatarButtons[0]?.dataset.avatar || selectedAvatarUrl;
+        playerAvatarEl.src = selectedAvatarUrl;
       }
       if (!savedName) {
         showOnboarding();
@@ -995,7 +1038,6 @@
     const currentStageIndex = Math.max(0, Math.min(state.currentStage, stageCount - 1));
     const stageData = game.stages[currentStageIndex];
 
-    // وضعیت عمومی بالای صفحه
     currentGameLabel.textContent = game.title;
     currentStageLabel.textContent = `${currentStageIndex + 1} از ${stageCount}`;
 
@@ -1183,16 +1225,23 @@
     if (e.target === modalBackdrop) hideModal();
   });
 
+  // دستاوردها به شکل آیتمی و جذاب
   achievementsBtn.addEventListener("click", () => {
     const unlockedCount = state.unlockedGames.size;
-    showModal(
-      "دستاوردهای تو 🏆",
-      `🌟 امتیاز کل: ${state.totalStars}\n` +
-      `🎮 بازی‌های باز شده: ${unlockedCount} از ۶\n\n` +
-      `✅ هر بازی رو کامل کنی، بازی بعدی برات باز می‌شه.\n` +
-      `⭐ هر جواب درست = یک ستاره‌ی جدید در امتیاز کل.\n` +
-      `🔥 سعی کن با جان‌های کمتر از دست‌رفته، رکورد خودت رو بشکنی.`
-    );
+    const currentGame = gamesData.find(g => g.id === state.currentGameId);
+    const currentGameTitle = currentGame ? currentGame.title : "—";
+    const currentStageHuman = currentGame ? state.currentStage + 1 : "—";
+
+    const body =
+      `نام بازیکن: ${state.userName}\n` +
+      `امتیاز کل: ${state.totalStars}\n` +
+      `بازی فعلی: ${currentGameTitle}\n` +
+      `مرحله فعلی: ${currentStageHuman}\n` +
+      `بازی‌های باز شده: ${unlockedCount} از ۶\n\n` +
+      `🔥 هر جواب درست = یک ستاره.\n` +
+      `🎯 سعی کن رکورد امتیازت رو هر بار بهتر کنی!`;
+
+    showModal("خلاصهٔ پیشرفتت تا الان", body);
   });
 
   helpBtn.addEventListener("click", () => {
