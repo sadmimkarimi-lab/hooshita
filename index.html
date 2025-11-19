@@ -27,9 +27,9 @@
       margin-bottom: 16px;
     }
 
-    /* هدر با گرادینت دلبرتر */
+    /* هدر با گرادینت دلبرتر (کمی پررنگ‌تر) */
     .header-card {
-      background: linear-gradient(135deg, #e0e7ff, #fce7f3);
+      background: linear-gradient(135deg, #d4d4ff, #fecdd3);
     }
 
     /* -------- هدر -------- */
@@ -364,17 +364,48 @@
       color: #374151;
     }
 
-    /* آواتار بزرگ بازیکن در صفحه بازی */
-    .player-avatar {
-      margin-top: 14px;
+    /* ردیف سوال + آواتار بازیکن */
+    .qa-row {
+      margin-top: 16px;
       display: flex;
-      justify-content: flex-start;
+      align-items: flex-start;
+      gap: 16px;
+    }
+
+    .player-avatar {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-shrink: 0;
     }
     .player-avatar img {
       width: 150px;
       max-width: 45%;
       height: auto;
       display: block;
+    }
+
+    .qa-main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .qa-main .question-block {
+      margin-top: 0; /* چون داخل ردیف هست، دیگه فاصله اضافی نمی‌خوایم */
+    }
+
+    @media (max-width: 600px) {
+      .qa-row {
+        flex-direction: column;
+        align-items: center;
+      }
+      .player-avatar img {
+        max-width: 60%;
+      }
+      .qa-main {
+        width: 100%;
+      }
     }
 
     .question-block {
@@ -688,14 +719,16 @@
       </div>
     </div>
 
-    <!-- آواتار انتخابی بازیکن -->
-    <div class="player-avatar">
-      <img id="playerAvatar" src="https://cdnfa.com/irangiah/a9be/uploads/new6/picsart-25-11-16-05-56-36-511.png" alt="آواتار بازیکن">
+    <!-- ردیف آواتار بازیکن + سوال و گزینه‌ها -->
+    <div class="qa-row">
+      <div class="player-avatar">
+        <img id="playerAvatar" src="https://cdnfa.com/irangiah/a9be/uploads/new6/picsart-25-11-16-05-56-36-511.png" alt="آواتار بازیکن">
+      </div>
+      <div class="qa-main">
+        <div class="question-block" id="questionText"></div>
+        <div class="options" id="optionsContainer"></div>
+      </div>
     </div>
-
-    <div class="question-block" id="questionText"></div>
-
-    <div class="options" id="optionsContainer"></div>
 
     <div class="progress-bar-wrap">
       <div class="progress-bar-inner" id="progressInner"></div>
@@ -939,7 +972,6 @@
         selectedAvatarUrl = savedAvatar;
         playerAvatarEl.src = savedAvatar;
       } else {
-        // اگر آواتار ذخیره نشده بود، از اولین گزینه استفاده کن
         selectedAvatarUrl = avatarButtons[0]?.dataset.avatar || selectedAvatarUrl;
         playerAvatarEl.src = selectedAvatarUrl;
       }
