@@ -372,26 +372,28 @@
       gap: 16px;
     }
 
-    .player-avatar {
-      flex-shrink: 0;
-      width: 32%;
-      max-width: 140px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
+   .player-avatar {
+  flex-shrink: 0;
+  width: 32%;
+  max-width: 140px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  order: 1;   /* 👈 این خط جدید، آواتار رو می‌فرسته سمت چپ */
+}
     .player-avatar img {
       width: 100%;
       height: auto;
       display: block;
     }
 
-    .qa-main {
-      flex: 1;
-      max-width: 68%;
-      display: flex;
-      flex-direction: column;
-    }
+  .qa-main {
+  flex: 1;
+  max-width: 68%;
+  display: flex;
+  flex-direction: column;
+  order: 0;  /* 👈 این خط می‌گه سوال و گزینه‌ها سمت راست باشن */
+}
 
     /* روی موبایل هم همچنان در یک ردیف می‌مانند، فقط کمی جمع‌تر می‌شوند */
     @media (max-width: 480px) {
