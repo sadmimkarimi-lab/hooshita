@@ -372,30 +372,29 @@
       gap: 16px;
     }
 
-   .player-avatar {
-  flex-shrink: 0;
-  width: 32%;
-  max-width: 140px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  order: 1;   /* 👈 این خط جدید، آواتار رو می‌فرسته سمت چپ */
-}
+    .player-avatar {
+      flex-shrink: 0;
+      width: 32%;
+      max-width: 140px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      order: 1;   /* آواتار سمت چپ */
+    }
     .player-avatar img {
       width: 100%;
       height: auto;
       display: block;
     }
 
-  .qa-main {
-  flex: 1;
-  max-width: 68%;
-  display: flex;
-  flex-direction: column;
-  order: 0;  /* 👈 این خط می‌گه سوال و گزینه‌ها سمت راست باشن */
-}
+    .qa-main {
+      flex: 1;
+      max-width: 68%;
+      display: flex;
+      flex-direction: column;
+      order: 0;  /* سوال و گزینه‌ها سمت راست */
+    }
 
-    /* روی موبایل هم همچنان در یک ردیف می‌مانند، فقط کمی جمع‌تر می‌شوند */
     @media (max-width: 480px) {
       .player-avatar {
         width: 38%;
@@ -795,154 +794,73 @@
 <script>
   // -------- داده‌های بازی‌ها --------
   const gamesData = [
-  {
-    id: 1,
-    title: "بازی ۱ - ایثار",
-    subtitle: "سوالات ایثار، شهدا و مفاهیم حماسی",
-    teaser: "از فرهنگ ایثار چقدر می‌دونی؟",
-    img: "https://cdnfa.com/irangiah/a9be/uploads/new6/picsart-25-11-16-05-59-27-132.png",
-    coachImg: "https://cdnfa.com/irangiah/a9be/uploads/new6/picsart-25-11-16-05-13-10-261.png",
-    timePerStageSec: 9,
-    stages: [
-      { q: "اولین شهید کربلا؟", options: ["مسلم بن عقیل","علی‌اکبر","حر"], correct: 0 },
-      { q: "یار باوفای حسین(ع)؟", options: ["عباس","حرمله","عمرسعد"], correct: 0 },
-      { q: "محل شهادت مختار؟", options: ["کوفه","بصره","شام"], correct: 0 },
-      { q: "شعار یاران حسین(ع):", options: ["هل من ناصر","لبیک یا حسین","یا لیتنا"], correct: 1 },
-      { q: "اولین شهید زن انقلاب:", options: ["مرضیه","طاهره","هاله"], correct: 1 },
-      { q: "ایثار یعنی:", options: ["از خودگذشتگی","کمک ساده","شجاعت"], correct: 0 },
-      { q: "یار نوجوان عاشورا:", options: ["قاسم","حر","زهیر"], correct: 0 },
-      { q: "شهدای غواص نماد:", options: ["مقاومت","علم","شجاعت"], correct: 0 },
-      { q: "شهید بابایی در حوزه:", options: ["هوایی","زمینی","دریایی"], correct: 0 },
-      { q: "محبوسان خندق کجا بود؟", options: ["مدینه","مکه","شام"], correct: 0 },
-      { q: "شهید تهرانی‌مقدم:", options: ["پدر موشکی","پدر دریایی","پدر سایبری"], correct: 0 },
-      { q: "پیام اصلی عاشورا:", options: ["آزادی","تسلیم","ثروت"], correct: 0 }
-    ]
-  },
-
-  {
-    id: 2,
-    title: "بازی ۲ - مذهبی",
-    subtitle: "سوالات مهم دینی و قرآنی",
-    teaser: "چقدر از دانسته‌های دینی یادت مونده؟",
-    img: "https://cdnfa.com/irangiah/a9be/uploads/new6/picsart-25-11-16-05-55-52-957.png",
-    coachImg: "https://cdnfa.com/irangiah/a9be/uploads/new6/picsart-25-11-16-06-01-08-979.png",
-    timePerStageSec: 10,
-    stages: [
-      { q: "قبله اول مسلمانان:", options: ["بیت‌المقدس","کعبه","نجف"], correct: 0 },
-      { q: "تعداد آیات سوره توحید:", options: ["۴","۵","۶"], correct: 0 },
-      { q: "روز مباهله در:", options: ["ذی‌الحجه","رجب","محرم"], correct: 0 },
-      { q: "پیامبر اولوالعزم:", options: ["نوح","هارون","شعیب"], correct: 0 },
-      { q: "کوثر یعنی:", options: ["خیر زیاد","نور","پاکی"], correct: 0 },
-      { q: "سوره‌ای که بسم‌الله ندارد:", options: ["توبه","نجم","قمر"], correct: 0 },
-      { q: "ماه روزه:", options: ["رمضان","شعبان","ربیع"], correct: 0 },
-      { q: "امام دهم:", options: ["هادی","عسکری","تقی"], correct: 0 },
-      { q: "محل غدیر:", options: ["جحفه","عرفه","احرام"], correct: 0 },
-      { q: "اولین سوره قرآن:", options: ["حمد","بقره","ناس"], correct: 0 },
-      { q: "امام مصلوب کوفه:", options: ["زید","باقر","سجاد"], correct: 0 },
-      { q: "تعداد تکبیرات نماز:", options: ["۷","۶","۵"], correct: 0 }
-    ]
-  },
-
-  {
-    id: 3,
-    title: "بازی ۳ - تاریخی",
-    subtitle: "سوالات ایران باستان و جهان",
-    teaser: "از تاریخ ایران و جهان چقدر می‌دونی؟",
-    img: "https://cdnfa.com/irangiah/a9be/uploads/new6/picsart-25-11-16-05-56-14-607.png",
-    coachImg: "https://cdnfa.com/irangiah/a9be/uploads/new6/picsart-25-11-16-06-02-26-146.png",
-    timePerStageSec: 11,
-    locked: false,
-    stages: [
-      { q: "سازنده تخت‌جمشید:", options: ["داریوش","کوروش","خشایار"], correct: 0 },
-      { q: "نبرد چالدران با:", options: ["عثمانی","مغول","تاتار"], correct: 0 },
-      { q: "سقوط ساسانیان در دوره:", options: ["عمر","عثمان","علی"], correct: 0 },
-      { q: "اولین پادشاه هخامنشی:", options: ["کوروش","داریوش","کمبوجیه"], correct: 0 },
-      { q: "پایتخت صفویان:", options: ["اصفهان","یزد","ری"], correct: 0 },
-      { q: "مغول از کدام سمت حمله کرد؟", options: ["شرق","غرب","جنوب"], correct: 0 },
-      { q: "مشروطه در سال:", options: ["۱۲۸۵","۱۳۰۱","۱۲۷۹"], correct: 0 },
-      { q: "سردار بزرگ ایران:", options: ["سورنا","نادر","قاجار"], correct: 0 },
-      { q: "کشف آمریکا توسط:", options: ["کلمب","واسکو","مگلان"], correct: 0 },
-      { q: "تمدن مایا متعلق به:", options: ["آمریکا","چین","هند"], correct: 0 },
-      { q: "نبرد نهاوند با:", options: ["روم","ساسانی","عرب"], correct: 0 },
-      { q: "معبد معروف آتن:", options: ["پارتنون","کارتاژ","توسکان"], correct: 0 }
-    ]
-  },
-
-  {
-    id: 4,
-    title: "بازی ۴ - علمی",
-    subtitle: "سوالات علمی کوتاه و مفهومی",
-    teaser: "علمی که جذاب و چالشی باشه!",
-    img: "https://cdnfa.com/irangiah/a9be/uploads/new6/picsart-25-11-16-05-56-36-511.png",
-    coachImg: "https://cdnfa.com/irangiah/a9be/uploads/new6/picsart-25-11-16-05-13-10-261.png",
-    timePerStageSec: 10,
-    locked: false,
-    stages: [
-      { q: "سنگین‌ترین گاز:", options: ["رادون","آرگون","نئون"], correct: 0 },
-      { q: "نزدیک‌ترین ستاره:", options: ["خورشید","شباهنگ","شعرا"], correct: 0 },
-      { q: "مغز چند لوب دارد؟", options: ["۴","۵","۳"], correct: 0 },
-      { q: "سریع‌ترین جانور:", options: ["شاهین","یوز","عقاب"], correct: 0 },
-      { q: "سخت‌ترین ماده:", options: ["الماس","کوارتز","تیتان"], correct: 0 },
-      { q: "مرکز گرانش زمین:", options: ["هسته","گوشته","پوسته"], correct: 0 },
-      { q: "سیاره غول‌گازی:", options: ["مشتری","زهره","زمین"], correct: 0 },
-      { q: "واحد نیرو:", options: ["نیوتون","ژول","پاسکال"], correct: 0 },
-      { q: "سریع‌ترین موج:", options: ["نور","صدا","باد"], correct: 0 },
-      { q: "نمک دریا حدود:", options: ["۳٪","۵٪","۱٪"], correct: 0 },
-      { q: "بزرگ‌ترین ماه:", options: ["ماه","فوبوس","گانیمد"], correct: 0 },
-      { q: "DNA از چی ساخته شده؟", options: ["نوکلئوتید","چربی","پروتئین"], correct: 0 }
-    ]
-  },
-
-  {
-    id: 5,
-    title: "بازی ۵ - هوش",
-    subtitle: "سوالات هوش منطقی و عددی",
-    teaser: "آزمون سرعت و دقت ذهن!",
-    img: "https://cdnfa.com/irangiah/a9be/uploads/new6/picsart-25-11-16-05-58-46-211.png",
-    coachImg: "https://cdnfa.com/irangiah/a9be/uploads/new6/picsart-25-11-16-06-04-13-059.png",
-    timePerStageSec: 8,
-    locked: false,
-    stages: [
-      { q: "دنباله ۲،۴،۸…:", options: ["۱۶","۱۲","۱۴"], correct: 0 },
-      { q: "کدام متفاوت است؟", options: ["خورشید","ماه","ستاره"], correct: 1 },
-      { q: "۳×۳×۰:", options: ["۰","۳","۹"], correct: 0 },
-      { q: "شکل بعدی:", options: ["مثلث","دایره","مربع"], correct: 0 },
-      { q: "الف،پ،ت،…", options: ["ث","ج","چ"], correct: 0 },
-      { q: "۵،۱۰،۲۰…", options: ["۴۰","۳۰","۲۵"], correct: 0 },
-      { q: "۶+۷:", options: ["۱۳","۱۲","۱۴"], correct: 0 },
-      { q: "کدام زوج است؟", options: ["۱۸","۱۹","۱۵"], correct: 0 },
-      { q: "اولین مضرب ۹:", options: ["۹","۱۸","۲۷"], correct: 0 },
-      { q: "کدام بزرگ‌تر است؟", options: ["۵۰","۴۹","۴۸"], correct: 0 },
-      { q: "مکمل ۱۰۰:", options: ["۰","۵۰","۱۰۰"], correct: 0 },
-      { q: "چهارمین عدد فرد:", options: ["۷","۵","۹"], correct: 0 }
-    ]
-  },
-
-  {
-    id: 6,
-    title: "بازی ۶ - تمرکز",
-    subtitle: "چالش تمرکز، دقت و واکنش",
-    teaser: "تمرکزتو محک بزن!",
-    img: "https://cdnfa.com/irangiah/a9be/uploads/new6/picsart-25-11-16-05-12-45-646.png",
-    coachImg: "https://cdnfa.com/irangiah/a9be/uploads/new6/picsart-25-11-16-05-13-10-261.png",
-    timePerStageSec: 7,
-    locked: false,
-    stages: [
-      { q: "رنگ سوم پرچم ایران:", options: ["سفید","قرمز","سبز"], correct: 0 },
-      { q: "کدام تکراری نیست؟", options: ["ب","پ","ب"], correct: 1 },
-      { q: "کلمه متفاوت:", options: ["در","از","بر"], correct: 2 },
-      { q: "چند نقطه دارد «ث»؟", options: ["۳","۲","۱"], correct: 0 },
-      { q: "کدام زوج نیست؟", options: ["۹","۶","۱۲"], correct: 0 },
-      { q: "اولین حرف:", options: ["الف","ب","پ"], correct: 0 },
-      { q: "بزرگ‌تر کدام است؟", options: ["۲۱","۱۲","۱۵"], correct: 0 },
-      { q: "کدام دیرتر تلفظ می‌شود؟", options: ["عصر","صبح","شب"], correct: 0 },
-      { q: "تعداد حروف «سلام»:", options: ["۴","۵","۶"], correct: 0 },
-      { q: "چه چیزی سنگین‌تر است؟", options: ["آهن","چوب","کاغذ"], correct: 0 },
-      { q: "چه چیزی سریع می‌سوزد؟", options: ["کاغذ","فلز","سنگ"], correct: 0 },
-      { q: "کدام صدا دارد؟", options: ["باد","سایه","نور"], correct: 0 }
-    ]
-  }
-];
+    {
+      id: 1,
+      title: "بازی ۱ - سرعت ذهن",
+      subtitle: "قبل از تمام شدن زمان، جواب درست رو انتخاب کن.",
+      teaser: "سریع‌تر از زمان جواب بده و ببین واقعاً چقدر تیزهوشی!",
+      img: "https://cdnfa.com/irangiah/a9be/uploads/new6/picsart-25-11-16-05-59-27-132.png",
+      coachImg: "https://cdnfa.com/irangiah/a9be/uploads/new6/picsart-25-11-16-05-13-10-261.png",
+      timePerStageSec: 8,
+      stages: [
+        { q: "کدوم عدد بزرگ‌تره؟", options: ["۵", "۷"], correct: 1 },
+        { q: "نتیجه ۳ + ۴ چنده؟", options: ["۶", "۷"], correct: 1 },
+        { q: "کدوم عدد کوچک‌تره؟", options: ["۹", "۲"], correct: 1 },
+        { q: "نتیجه ۱۰ - ۳ چنده؟", options: ["۷", "۶"], correct: 0 },
+        { q: "بعد از عدد ۸، کدومه؟", options: ["۹", "۷"], correct: 0 },
+        { q: "کدوم عدد زوج است؟", options: ["۵", "۸"], correct: 1 },
+        { q: "نتیجه ۲ × ۳ چنده؟", options: ["۵", "۶"], correct: 1 },
+        { q: "کدوم بزرگ‌تره؟", options: ["۱۲", "۹"], correct: 0 },
+        { q: "عدد میانی بین ۳ و ۵ چنده؟", options: ["۴", "۶"], correct: 0 },
+        { q: "نتیجه ۹ - ۴ چنده؟", options: ["۵", "۳"], correct: 0 }
+      ]
+    },
+    {
+      id: 2,
+      title: "بازی ۲ - حافظه تاویتا",
+      subtitle: "الگو، تصویر یا عدد رو به خاطر بسپار و درست تکرار کن.",
+      teaser: "الگوها خیلی زود فرار می‌کنن؛ یادت بمونه!",
+      img: "https://cdnfa.com/irangiah/a9be/uploads/new6/picsart-25-11-16-05-55-52-957.png",
+      coachImg: "https://cdnfa.com/irangiah/a9be/uploads/new6/picsart-25-11-16-06-01-08-979.png",
+      timePerStageSec: 10,
+      stages: [
+        { q: "کدوم دنباله با ۱،۲،۳ شروع می‌شود؟", options: ["۱-۲-۳-۴", "۳-۲-۱-۰"], correct: 0 },
+        { q: "کدوم دو عدد پشت هم هستند؟", options: ["۴ و ۶", "۶ و ۷"], correct: 1 }
+      ]
+    },
+    {
+      id: 3,
+      title: "بازی ۳ - تمرکز",
+      subtitle: "به‌زودی فعال می‌شود.",
+      teaser: "به‌زودی یک چالش تمرکز جدی اینجاست.",
+      img: "https://cdnfa.com/irangiah/a9be/uploads/new6/picsart-25-11-16-05-56-14-607.png",
+      locked: true
+    },
+    {
+      id: 4,
+      title: "بازی ۴ - کلمات هوشمند",
+      subtitle: "به‌زودی فعال می‌شود.",
+      teaser: "با کلمات بازی می‌کنیم و مغزت رو قلقلک می‌دیم.",
+      img: "https://cdnfa.com/irangiah/a9be/uploads/new6/picsart-25-11-16-05-56-36-511.png",
+      locked: true
+    },
+    {
+      id: 5,
+      title: "بازی ۵ - واکنش سریع",
+      subtitle: "به‌زودی فعال می‌شود.",
+      teaser: "سرعت واکنش‌ات رو می‌سنجیم.",
+      img: "https://cdnfa.com/irangiah/a9be/uploads/new6/picsart-25-11-16-05-58-46-211.png",
+      locked: true
+    },
+    {
+      id: 6,
+      title: "بازی ۶ - چالش نهایی",
+      subtitle: "به‌زودی فعال می‌شود.",
+      teaser: "آخرین مرحله، مخصوص قهرمان‌های تاویتا!",
+      img: "https://cdnfa.com/irangiah/a9be/uploads/new6/picsart-25-11-16-05-12-45-646.png",
+      locked: true
+    }
+  ];
 
   // -------- وضعیت کلی --------
   const state = {
@@ -1008,6 +926,9 @@
   // تایمر
   let timerInterval = null;
   let timerRemaining = 0;
+
+  // ایندکس گزینهٔ درست بعد از شافل
+  let currentCorrectIndex = 0;
 
   // ---- انتخاب کاراکتر در پاپ‌آپ شروع ----
   avatarButtons.forEach(btn => {
@@ -1144,7 +1065,7 @@
     timerValueEl.textContent = `${timerRemaining} ثانیه ⏳`;
   }
 
-  // ---- آپدیت UI بازی ----
+  // ---- آپدیت UI بازی + شافل گزینه‌ها ----
   function updateGameUi() {
     const game = gamesData.find(g => g.id === state.currentGameId);
     if (!game) return;
@@ -1165,12 +1086,32 @@
     progressInner.style.width = `${progress}%`;
 
     questionTextEl.textContent = stageData.q;
+
+    // ساخت آرایهٔ گزینه‌ها با ایندکس اصلی
+    const originalOptions = stageData.options.map((text, idx) => ({
+      text,
+      originalIndex: idx
+    }));
+
+    // کپی و شافل با فیشر–ییتس
+    const shuffled = [...originalOptions];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      const temp = shuffled[i];
+      shuffled[i] = shuffled[j];
+      shuffled[j] = temp;
+    }
+
+    // پیدا کردن جای جدید گزینهٔ درست
+    currentCorrectIndex = shuffled.findIndex(opt => opt.originalIndex === stageData.correct);
+
+    // ساخت دکمه‌ها براساس گزینه‌های شافل شده
     optionsContainer.innerHTML = "";
-    stageData.options.forEach((opt, index) => {
+    shuffled.forEach((opt, btnIndex) => {
       const btn = document.createElement("button");
       btn.className = "option-btn";
-      btn.textContent = opt;
-      btn.addEventListener("click", () => handleAnswer(index));
+      btn.textContent = opt.text;
+      btn.addEventListener("click", () => handleAnswer(btnIndex));
       optionsContainer.appendChild(btn);
     });
 
@@ -1181,60 +1122,83 @@
   let answeringLocked = false;
 
   function handleAnswer(index) {
-  if (answeringLocked) return;
-  const game = gamesData.find(g => g.id === state.currentGameId);
-  if (!game) return;
+    if (answeringLocked) return;
+    const game = gamesData.find(g => g.id === state.currentGameId);
+    if (!game) return;
 
-  clearInterval(timerInterval);
-  const stageData = game.stages[state.currentStage];
-  const correctIndex = stageData.correct;
+    clearInterval(timerInterval);
 
-  const optionButtons = Array.from(document.querySelectorAll(".option-btn"));
-  answeringLocked = true;
+    const optionButtons = Array.from(document.querySelectorAll(".option-btn"));
+    answeringLocked = true;
 
-  // اول همه کلاس‌های قبلی رو پاک کن
-  optionButtons.forEach(btn => {
-    btn.classList.remove("correct", "wrong");
-  });
+    // پاک کردن حالت‌های قبلی
+    optionButtons.forEach(btn => {
+      btn.classList.remove("correct", "wrong");
+    });
 
-  if (index === correctIndex) {
-    // فقط همون گزینه‌ای که کاربر زده، سبز بشه
-    optionButtons[index].classList.add("correct");
+    const isCorrect = (index === currentCorrectIndex);
 
-    state.gameStars += 1;
-    state.totalStars += 1;
-    pulse(starStatEl, "bounce");
-    coachTextEl.textContent = "آفرین! یه قدم دیگه جلو رفتی. برو بعدی 👏";
+    if (isCorrect) {
+      // فقط همان گزینه‌ای که کاربر زده سبز شود
+      optionButtons[index].classList.add("correct");
 
-    setTimeout(() => {
-      state.currentStage++;
-      if (state.currentStage >= game.stages.length) {
-        unlockNextGame();
-        showModal(
-          "آفرین قهرمان! 🎉",
-          "تمام مراحل این بازی رو رد کردی.\nمی‌تونی بازی بعدی رو هم امتحان کنی."
-        );
-        backToList();
-      } else {
-        updateGameUi();
-      }
-      updateGlobalStats();
-      answeringLocked = false;
-    }, 700);
+      state.gameStars += 1;
+      state.totalStars += 1;
+      pulse(starStatEl, "bounce");
+      coachTextEl.textContent = "آفرین! یه قدم دیگه جلو رفتی. برو بعدی 👏";
 
-  } else {
-    // فقط همون گزینه‌ای که کاربر زده، قرمز بشه
-    optionButtons[index].classList.add("wrong");
+      setTimeout(() => {
+        state.currentStage++;
+        if (state.currentStage >= game.stages.length) {
+          unlockNextGame();
+          showModal(
+            "آفرین قهرمان! 🎉",
+            "تمام مراحل این بازی رو رد کردی.\nمی‌تونی بازی بعدی رو هم امتحان کنی."
+          );
+          backToList();
+        } else {
+          updateGameUi();
+        }
+        updateGlobalStats();
+        answeringLocked = false;
+      }, 700);
 
+    } else {
+      // فقط همان گزینه‌ای که کاربر زده قرمز شود
+      optionButtons[index].classList.add("wrong");
+
+      state.hearts -= 1;
+      pulse(heartStatEl, "shake");
+      coachTextEl.textContent = "اشکالی نداره، دوباره تلاش کن. این‌بار دقیق‌تر نگاه کن.";
+
+      setTimeout(() => {
+        if (state.hearts <= 0) {
+          showModal(
+            "جان‌هات تموم شد 😅",
+            "نگران نباش؛ می‌تونی با دکمه «شروع مجدد بازی» کل بازی رو از اول شروع کنی."
+          );
+          resetCurrentGameOnly();
+        } else {
+          updateGameUi();
+        }
+        updateGlobalStats();
+        answeringLocked = false;
+      }, 700);
+    }
+  }
+
+  function handleTimeout() {
+    if (answeringLocked) return;
+    answeringLocked = true;
     state.hearts -= 1;
     pulse(heartStatEl, "shake");
-    coachTextEl.textContent = "اشکالی نداره، دوباره تلاش کن. این‌بار دقیق‌تر نگاه کن.";
+    coachTextEl.textContent = "وقتت تموم شد! این‌بار سریع‌تر جواب بده.";
 
     setTimeout(() => {
       if (state.hearts <= 0) {
         showModal(
-          "جان‌هات تموم شد 😅",
-          "نگران نباش؛ می‌تونی با دکمه «شروع مجدد بازی» همین بازی رو دوباره از اول شروع کنی."
+          "زمانت تموم شد 😅",
+          "همه‌ی جان‌هات رفت. با «شروع مجدد بازی» می‌تونی کل بازی رو از صفر شروع کنی."
         );
         resetCurrentGameOnly();
       } else {
@@ -1244,7 +1208,6 @@
       answeringLocked = false;
     }, 700);
   }
-}
 
   function pulse(el, className) {
     el.classList.remove(className);
