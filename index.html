@@ -26,6 +26,10 @@
       padding: 16px 20px;
       margin-bottom: 16px;
     }
+    /* هدر رنگی */
+    .header-card {
+      background: linear-gradient(135deg, #eef2ff, #e0f2fe);
+    }
 
     /* -------- هدر -------- */
     .header {
@@ -41,11 +45,6 @@
       gap: 8px;
       align-items: flex-start;
       justify-content: center;
-    }
-    @media (min-width: 480px) {
-      .header-left {
-        flex-direction: column;
-      }
     }
 
     .header-right {
@@ -464,7 +463,7 @@
       flex-shrink: 0;
     }
 
-    /* -------- پاپ‌آپ -------- */
+    /* -------- پاپ‌آپ عمومی -------- */
     .modal-backdrop {
       position: fixed;
       inset: 0;
@@ -507,13 +506,94 @@
       color: #fff;
       cursor: pointer;
     }
+
+    /* -------- پاپ‌آپ شروع (نام + کاراکتر) -------- */
+    .onboard-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.45);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 30;
+    }
+    .onboard-backdrop.active {
+      display: flex;
+    }
+    .onboard-modal {
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 18px 20px;
+      max-width: 360px;
+      width: 92%;
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.35);
+      font-size: 13px;
+      text-align: right;
+    }
+    .onboard-modal h3 {
+      margin: 0 0 8px;
+      font-size: 18px;
+    }
+    .onboard-modal p {
+      margin: 4px 0 10px;
+      color: #4b5563;
+      line-height: 1.7;
+    }
+    .onboard-input {
+      width: 100%;
+      border-radius: 999px;
+      border: 1px solid #e5e7eb;
+      padding: 8px 12px;
+      margin-bottom: 12px;
+      font-size: 13px;
+    }
+    .avatar-choices {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 12px;
+      justify-content: center;
+    }
+    .avatar-choice {
+      border-radius: 16px;
+      border: 2px solid transparent;
+      padding: 4px;
+      background: #f9fafb;
+      cursor: pointer;
+      width: 70px;
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 10px rgba(15,23,42,0.12);
+    }
+    .avatar-choice img {
+      max-width: 100%;
+      max-height: 100%;
+      border-radius: 12px;
+      object-fit: cover;
+    }
+    .avatar-choice.selected {
+      border-color: #4f46e5;
+      box-shadow: 0 0 0 3px rgba(79,70,229,0.25);
+    }
+    .onboard-confirm {
+      margin-top: 4px;
+      width: 100%;
+      border-radius: 999px;
+      border: none;
+      padding: 9px 0;
+      font-size: 14px;
+      background: linear-gradient(135deg, #4f46e5, #6366f1);
+      color: #fff;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
 <div class="app">
 
   <!-- هدر -->
-  <div class="card">
+  <div class="card header-card">
     <div class="header">
       <!-- راست: لوگو، عنوان، کاربر -->
       <div class="header-right">
@@ -582,9 +662,6 @@
         ⏱ زمان باقیمانده:
         <span id="timerValue">-- ثانیه</span>
       </div>
-      <div class="stat-pill">
-        مرحله: <span id="stageNumberTop">1</span> از <span id="stageTotalTop">10</span>
-      </div>
     </div>
 
     <div class="coach-row">
@@ -624,6 +701,26 @@
     <h3 id="modalTitle">عنوان</h3>
     <p id="modalBody">متن پاپ‌آپ اینجاست.</p>
     <button class="modal-close" id="modalCloseBtn">باشه</button>
+  </div>
+</div>
+
+<!-- پاپ‌آپ شروع (نام + کاراکتر) -->
+<div class="onboard-backdrop" id="onboardBackdrop">
+  <div class="onboard-modal">
+    <h3>شروع بازی هوشیتا 🎮</h3>
+    <p>اول اسمت رو بنویس و یکی از کاراکترهای تاویتا رو انتخاب کن. هر وقت برگشتی، از همین‌جا ادامه می‌دی.</p>
+    <input id="onboardNameInput" class="onboard-input" type="text" placeholder="مثلاً الهه">
+    <div class="avatar-choices">
+      <button type="button" class="avatar-choice selected"
+              data-avatar="https://cdnfa.com/irangiah/a9be/uploads/new6/picsart-25-11-16-05-13-10-261.png">
+        <img src="https://cdnfa.com/irangiah/a9be/uploads/new6/picsart-25-11-16-05-13-10-261.png" alt="کاراکتر ۱">
+      </button>
+      <button type="button" class="avatar-choice"
+              data-avatar="https://cdnfa.com/irangiah/a9be/uploads/new6/picsart-25-11-16-06-01-08-979.png">
+        <img src="https://cdnfa.com/irangiah/a9be/uploads/new6/picsart-25-11-16-06-01-08-979.png" alt="کاراکتر ۲">
+      </button>
+    </div>
+    <button id="onboardConfirmBtn" class="onboard-confirm">بزن بریم 😍</button>
   </div>
 </div>
 
@@ -709,6 +806,9 @@
     gameStars: 0
   };
 
+  const USER_KEY = "hoshitaUserName";
+  const AVATAR_KEY = "hoshitaAvatarUrl";
+
   // المنت‌ها
   const gamesGrid = document.getElementById("gamesGrid");
   const gamesScreen = document.getElementById("gamesScreen");
@@ -733,8 +833,6 @@
   const optionsContainer = document.getElementById("optionsContainer");
   const progressInner = document.getElementById("progressInner");
   const stageLabelBottom = document.getElementById("stageLabelBottom");
-  const stageNumberTop = document.getElementById("stageNumberTop");
-  const stageTotalTop = document.getElementById("stageTotalTop");
   const timerValueEl = document.getElementById("timerValue");
 
   const backToListBtn = document.getElementById("backToListBtn");
@@ -749,9 +847,66 @@
   const modalBody = document.getElementById("modalBody");
   const modalCloseBtn = document.getElementById("modalCloseBtn");
 
+  // پاپ‌آپ شروع
+  const onboardBackdrop = document.getElementById("onboardBackdrop");
+  const onboardNameInput = document.getElementById("onboardNameInput");
+  const onboardConfirmBtn = document.getElementById("onboardConfirmBtn");
+  const avatarButtons = document.querySelectorAll(".avatar-choice");
+  let selectedAvatarUrl = avatarButtons[0]?.dataset.avatar || "";
+
   // تایمر
   let timerInterval = null;
   let timerRemaining = 0;
+
+  // ---- انتخاب کاراکتر در پاپ‌آپ شروع ----
+  avatarButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      avatarButtons.forEach(b => b.classList.remove("selected"));
+      btn.classList.add("selected");
+      selectedAvatarUrl = btn.dataset.avatar;
+    });
+  });
+
+  function showOnboarding() {
+    onboardNameInput.value = state.userName || "";
+    onboardBackdrop.classList.add("active");
+  }
+  function hideOnboarding() {
+    onboardBackdrop.classList.remove("active");
+  }
+
+  onboardConfirmBtn.addEventListener("click", () => {
+    const name = onboardNameInput.value.trim() || "دوست تاویتا";
+    state.userName = name;
+    userNameEl.textContent = name;
+    try {
+      localStorage.setItem(USER_KEY, name);
+      if (selectedAvatarUrl) {
+        localStorage.setItem(AVATAR_KEY, selectedAvatarUrl);
+      }
+    } catch (e) {}
+    hideOnboarding();
+    renderGamesList();
+  });
+
+  function initUser() {
+    try {
+      const savedName = localStorage.getItem(USER_KEY);
+      const savedAvatar = localStorage.getItem(AVATAR_KEY);
+      if (savedName) {
+        state.userName = savedName;
+        userNameEl.textContent = savedName;
+      }
+      if (savedAvatar) {
+        // فعلاً فقط نگه می‌داریم؛ بعداً می‌تونیم تو هدر یا جایی نمایش بدیم
+      }
+      if (!savedName) {
+        showOnboarding();
+      }
+    } catch (e) {
+      showOnboarding();
+    }
+  }
 
   // ---- رندر کارت‌ها ----
   function renderGamesList() {
@@ -804,8 +959,6 @@
     coachImgEl.src = game.coachImg;
     coachTextEl.textContent = "آروم باش، با دقت جواب بده. هر مرحله که جلو بری، ستاره می‌گیری!";
 
-    stageTotalTop.textContent = game.stages.length.toString();
-
     gamesScreen.classList.add("hidden");
     gameScreen.classList.remove("hidden");
 
@@ -848,9 +1001,6 @@
 
     heartsCountEl.textContent = state.hearts.toString();
     gameStarsEl.textContent = state.gameStars.toString();
-
-    stageNumberTop.textContent = (currentStageIndex + 1).toString();
-    stageTotalTop.textContent = stageCount.toString();
 
     stageLabelBottom.textContent = `مرحله ${currentStageIndex + 1} از ${stageCount}`;
 
@@ -961,7 +1111,7 @@
     state.hearts = 3;
     state.gameStars = 0;
     state.currentStage = 0;
-    updateGameUi(); // نوار جون هم صفر و از اول
+    updateGameUi();
   }
 
   function unlockNextGame() {
@@ -1066,7 +1216,10 @@
   });
 
   // شروع اولیه
-  renderGamesList();
+  initUser();
+  if (!onboardBackdrop.classList.contains("active")) {
+    renderGamesList();
+  }
 </script>
 </body>
 </html>
