@@ -1181,70 +1181,61 @@
   let answeringLocked = false;
 
   function handleAnswer(index) {
-    if (answeringLocked) return;
-    const game = gamesData.find(g => g.id === state.currentGameId);
-    if (!game) return;
+  if (answeringLocked) return;
+  const game = gamesData.find(g => g.id === state.currentGameId);
+  if (!game) return;
 
-    clearInterval(timerInterval);
-    const stageData = game.stages[state.currentStage];
-    const correctIndex = stageData.correct;
+  clearInterval(timerInterval);
+  const stageData = game.stages[state.currentStage];
+  const correctIndex = stageData.correct;
 
-    const optionButtons = Array.from(document.querySelectorAll(".option-btn"));
-    answeringLocked = true;
+  const optionButtons = Array.from(document.querySelectorAll(".option-btn"));
+  answeringLocked = true;
 
-    optionButtons.forEach((btn, idx) => {
-      if (idx === correctIndex) btn.classList.add("correct");
-      if (idx === index && index !== correctIndex) btn.classList.add("wrong");
-    });
+  // اول همه کلاس‌های قبلی رو پاک کن
+  optionButtons.forEach(btn => {
+    btn.classList.remove("correct", "wrong");
+  });
 
-    if (index === correctIndex) {
-      state.gameStars += 1;
-      state.totalStars += 1;
-      pulse(starStatEl, "bounce");
-      coachTextEl.textContent = "آفرین! یه قدم دیگه جلو رفتی. برو بعدی 👏";
-      setTimeout(() => {
-        state.currentStage++;
-        if (state.currentStage >= game.stages.length) {
-          unlockNextGame();
-          showModal("آفرین قهرمان! 🎉",
-            "تمام مراحل این بازی رو رد کردی.\nمی‌تونی بازی بعدی رو هم امتحان کنی.");
-          backToList();
-        } else {
-          updateGameUi();
-        }
-        updateGlobalStats();
-        answeringLocked = false;
-      }, 700);
-    } else {
-      state.hearts -= 1;
-      pulse(heartStatEl, "shake");
-      coachTextEl.textContent = "اشکالی نداره، دوباره تلاش کن. این‌بار دقیق‌تر نگاه کن.";
+  if (index === correctIndex) {
+    // فقط همون گزینه‌ای که کاربر زده، سبز بشه
+    optionButtons[index].classList.add("correct");
 
-      setTimeout(() => {
-        if (state.hearts <= 0) {
-          showModal("جان‌هات تموم شد 😅",
-            "نگران نباش؛ می‌تونی با دکمه «شروع مجدد بازی» کل بازی رو از اول شروع کنی.");
-          resetCurrentGameOnly();
-        } else {
-          updateGameUi();
-        }
-        updateGlobalStats();
-        answeringLocked = false;
-      }, 700);
-    }
-  }
+    state.gameStars += 1;
+    state.totalStars += 1;
+    pulse(starStatEl, "bounce");
+    coachTextEl.textContent = "آفرین! یه قدم دیگه جلو رفتی. برو بعدی 👏";
 
-  function handleTimeout() {
-    if (answeringLocked) return;
-    answeringLocked = true;
+    setTimeout(() => {
+      state.currentStage++;
+      if (state.currentStage >= game.stages.length) {
+        unlockNextGame();
+        showModal(
+          "آفرین قهرمان! 🎉",
+          "تمام مراحل این بازی رو رد کردی.\nمی‌تونی بازی بعدی رو هم امتحان کنی."
+        );
+        backToList();
+      } else {
+        updateGameUi();
+      }
+      updateGlobalStats();
+      answeringLocked = false;
+    }, 700);
+
+  } else {
+    // فقط همون گزینه‌ای که کاربر زده، قرمز بشه
+    optionButtons[index].classList.add("wrong");
+
     state.hearts -= 1;
     pulse(heartStatEl, "shake");
-    coachTextEl.textContent = "وقتت تموم شد! این‌بار سریع‌تر جواب بده.";
+    coachTextEl.textContent = "اشکالی نداره، دوباره تلاش کن. این‌بار دقیق‌تر نگاه کن.";
 
     setTimeout(() => {
       if (state.hearts <= 0) {
-        showModal("زمانت تموم شد 😅",
-          "همه‌ی جان‌هات رفت. با «شروع مجدد بازی» می‌تونی کل بازی رو از صفر شروع کنی.");
+        showModal(
+          "جان‌هات تموم شد 😅",
+          "نگران نباش؛ می‌تونی با دکمه «شروع مجدد بازی» همین بازی رو دوباره از اول شروع کنی."
+        );
         resetCurrentGameOnly();
       } else {
         updateGameUi();
@@ -1253,6 +1244,7 @@
       answeringLocked = false;
     }, 700);
   }
+}
 
   function pulse(el, className) {
     el.classList.remove(className);
