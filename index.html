@@ -364,49 +364,49 @@
       color: #374151;
     }
 
-    /* ردیف سوال + آواتار بازیکن */
+    /* --------- این بخش فقط برای ردیف سؤال + آواتار بازیکن است --------- */
     .qa-row {
       margin-top: 16px;
       display: flex;
-      align-items: flex-start;
+      align-items: stretch;
       gap: 16px;
     }
 
     .player-avatar {
+      flex-shrink: 0;
+      width: 32%;
+      max-width: 140px;
       display: flex;
       justify-content: center;
       align-items: center;
-      flex-shrink: 0;
     }
     .player-avatar img {
-      width: 150px;
-      max-width: 45%;
+      width: 100%;
       height: auto;
       display: block;
     }
 
     .qa-main {
       flex: 1;
+      max-width: 68%;
       display: flex;
       flex-direction: column;
     }
 
-    .qa-main .question-block {
-      margin-top: 0; /* چون داخل ردیف هست، دیگه فاصله اضافی نمی‌خوایم */
-    }
-
-    @media (max-width: 600px) {
-      .qa-row {
-        flex-direction: column;
-        align-items: center;
-      }
-      .player-avatar img {
-        max-width: 60%;
+    /* روی موبایل هم همچنان در یک ردیف می‌مانند، فقط کمی جمع‌تر می‌شوند */
+    @media (max-width: 480px) {
+      .player-avatar {
+        width: 38%;
+        max-width: 120px;
       }
       .qa-main {
-        width: 100%;
+        max-width: 62%;
+      }
+      .question-block {
+        font-size: 14px;
       }
     }
+    /* --------------------------------------------------------------- */
 
     .question-block {
       margin-top: 18px;
