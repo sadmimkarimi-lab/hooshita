@@ -802,7 +802,6 @@
       subtitle: "سوال‌های عددی و منطقی؛ از متوسط تا خیلی سخت.",
       teaser: "آماده‌ای مغزت رو با اعداد و الگوها قلقلک بدی؟",
       img: "https://cdnfa.com/irangiah/a9be/uploads/bazi2/kart-hoosh.webp",
-      // coachImg قبلی فعلاً دیگر استفاده نمی‌شود، مربی از coachStates می‌آید
       coachImg: "",
       timePerStageSec: 8,
       locked: false,
@@ -1045,6 +1044,7 @@
   const achievementsBtn = document.getElementById("achievementsBtn");
   const helpBtn = document.getElementById("helpBtn");
   const aboutBtn = document.getElementById("aboutBtn");
+  const profileBtn = document.getElementById("profileBtn");
 
   const modalBackdrop = document.getElementById("modalBackdrop");
   const modalTitle = document.getElementById("modalTitle");
@@ -1066,7 +1066,6 @@
   let currentCorrectIndex = 0;
 
   // --- ۶ حالت مربی: برای هر حالت یک عکس و یک متن ---
-  // TODO: این آدرس‌ها رو بعداً با لینک‌ عکس‌های واقعی خودت عوض کن
   const coachStates = {
     start: {
       img: "https://cdnfa.com/irangiah/a9be/uploads/bazi2/mehraban.webp",
@@ -1207,7 +1206,6 @@
     gameTitleEl.textContent = game.title;
     gameSubtitleEl.textContent = game.subtitle;
 
-    // مربی: حالت شروع
     setCoachState("start");
 
     gamesScreen.classList.add("hidden");
@@ -1259,25 +1257,19 @@
 
     questionTextEl.textContent = stageData.q;
 
-    // ساخت آرایهٔ گزینه‌ها با ایندکس اصلی
     const originalOptions = stageData.options.map((text, idx) => ({
       text,
       originalIndex: idx
     }));
 
-    // کپی و شافل با فیشر–ییتس
     const shuffled = [...originalOptions];
     for (let i = shuffled.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
-      const temp = shuffled[i];
-      shuffled[i] = shuffled[j];
-      shuffled[j] = temp;
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
     }
 
-    // پیدا کردن جای جدید گزینهٔ درست
     currentCorrectIndex = shuffled.findIndex(opt => opt.originalIndex === stageData.correct);
 
-    // ساخت دکمه‌ها براساس گزینه‌های شافل شده
     optionsContainer.innerHTML = "";
     shuffled.forEach((opt, btnIndex) => {
       const btn = document.createElement("button");
@@ -1303,7 +1295,6 @@
     const optionButtons = Array.from(document.querySelectorAll(".option-btn"));
     answeringLocked = true;
 
-    // پاک کردن حالت‌های قبلی
     optionButtons.forEach(btn => {
       btn.classList.remove("correct", "wrong");
     });
@@ -1311,20 +1302,17 @@
     const isCorrect = (index === currentCorrectIndex);
 
     if (isCorrect) {
-      // فقط همان گزینه‌ای که کاربر زده سبز شود
       optionButtons[index].classList.add("correct");
 
       state.gameStars += 1;
       state.totalStars += 1;
       pulse(starStatEl, "bounce");
 
-      // مربی: حالت پاسخ درست
       setCoachState("correct");
 
       setTimeout(() => {
         state.currentStage++;
         if (state.currentStage >= game.stages.length) {
-          // مربی: تمام شدن بازی
           setCoachState("gameComplete");
           unlockNextGame();
           showModal(
@@ -1340,18 +1328,15 @@
       }, 700);
 
     } else {
-      // فقط همان گزینه‌ای که کاربر زده قرمز شود
       optionButtons[index].classList.add("wrong");
 
       state.hearts -= 1;
       pulse(heartStatEl, "shake");
 
-      // مربی: حالت پاسخ غلط
       setCoachState("wrong");
 
       setTimeout(() => {
         if (state.hearts <= 0) {
-          // مربی: گیم اور
           setCoachState("gameOver");
           showModal(
             "جان‌هات تموم شد 😅",
@@ -1373,7 +1358,6 @@
     state.hearts -= 1;
     pulse(heartStatEl, "shake");
 
-    // مربی: حالت اتمام زمان
     setCoachState("timeout");
 
     setTimeout(() => {
@@ -1406,7 +1390,6 @@
     state.hearts = 3;
     state.gameStars = 0;
     state.currentStage = 0;
-    // وقتی از اول شروع می‌کند، مربی دوباره حالت start بگیرد
     setCoachState("start");
     updateGameUi();
   }
@@ -1440,11 +1423,7 @@
     state.gameStars = 0;
 
     gamesData.forEach((g, index) => {
-      if (index === 0) {
-        g.locked = false;
-      } else {
-        g.locked = true;
-      }
+      g.locked = index !== 0;
     });
 
     updateGlobalStats();
@@ -1463,7 +1442,7 @@
   }
   backToListBtn.addEventListener("click", backToList);
 
-  // ---- شروع مجدد از فوتر (ریست کامل) ----
+  // ---- شروع مجدد از فوتر ----
   restartBtn.addEventListener("click", resetAllGameProgress);
 
   // ---- پاپ‌آپ‌ها ----
@@ -1480,7 +1459,7 @@
     if (e.target === modalBackdrop) hideModal();
   });
 
-  // دستاوردها به شکل آیتمی و جذاب
+  // دستاوردها
   achievementsBtn.addEventListener("click", () => {
     const unlockedCount = state.unlockedGames.size;
     const currentGame = gamesData.find(g => g.id === state.currentGameId);
@@ -1514,10 +1493,17 @@
   aboutBtn.addEventListener("click", () => {
     showModal(
       "درباره طاویتا",
-      "بازی‌های هوشیتا برای تمرین مغز، تمرکز، سرعت ذهن و حافظه طراحی شده.\n" +
-      "این برنامه توسط تیم طاویتا ساخته شده تا تمرین، شبیه یک بازی قشنگ و دوست‌داشتنی باشه."
+      "هوشیتا مجموعه‌ای از بازی‌های فکریه که با کمک طاویتا ساخته شده تا تمرین مغز، تمرکز، حافظه و سواد علمی‌ات شبیه یک بازی دوست‌داشتنی و کوتاه باشه؛ نه یک امتحان استرس‌زا. 🌈\n\n" +
+      "هر وقت حوصله‌ات سر رفت، چند مرحله بازی کن و ببین هر بار چقدر بهتر می‌شی."
     );
   });
+
+  // دکمه پروفایل من – بازکردن دوباره پاپ‌آپ نام و آواتار
+  if (profileBtn) {
+    profileBtn.addEventListener("click", () => {
+      showOnboarding();
+    });
+  }
 
   // شروع اولیه
   initUser();
