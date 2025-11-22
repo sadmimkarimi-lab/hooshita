@@ -1587,19 +1587,28 @@
   restartBtn.addEventListener("click", resetAllGameProgress);
 
   // ---- پاپ‌آپ‌ها ----
-  function showModal(title, bodyHtml) {
-    modalTitle.textContent = title;
-    // مهم: innerHTML تا لینک‌ها و <p> ها کار کنند
-    modalBody.innerHTML = bodyHtml;
-    modalBackdrop.classList.add("active");
-  }
-  function hideModal() {
-    modalBackdrop.classList.remove("active");
-  }
-  modalCloseBtn.addEventListener("click", hideModal);
-  modalBackdrop.addEventListener("click", (e) => {
-    if (e.target === modalBackdrop) hideModal();
-  });
+function showModal(title, bodyHtml) {
+  modalTitle.textContent = title;
+
+  // قابل نمایش بودن لینک‌ها و HTML
+  modalBody.innerHTML = `
+    <div style="line-height:1.9; font-size:17px; text-align:right;">
+      ${bodyHtml}
+    </div>
+  `;
+
+  modalBackdrop.classList.add("active");
+}
+
+function hideModal() {
+  modalBackdrop.classList.remove("active");
+}
+
+modalCloseBtn.addEventListener("click", hideModal);
+
+modalBackdrop.addEventListener("click", (e) => {
+  if (e.target === modalBackdrop) hideModal();
+});
 
   // ---- دستاوردها (خلاصه پیشرفت) ----
   achievementsBtn.addEventListener("click", () => {
