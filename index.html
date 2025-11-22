@@ -659,10 +659,11 @@
         </div>
       </div>
       <!-- چپ: راهنما و درباره -->
-      <div class="header-left">
-        <button class="pill-btn" id="helpBtn">راهنمای بازی</button>
-        <button class="pill-btn" id="aboutBtn">درباره طاویتا</button>
-      </div>
+<div class="header-left">
+  <button class="pill-btn" id="helpBtn">راهنمای بازی</button>
+  <button class="pill-btn" id="aboutBtn">درباره طاویتا</button>
+  <button class="pill-btn" id="profileBtn">پروفایل من</button>
+</div>
     </div>
   </div>
 
@@ -1163,7 +1164,8 @@
   const achievementsBtn = document.getElementById("achievementsBtn");
   const helpBtn = document.getElementById("helpBtn");
   const aboutBtn = document.getElementById("aboutBtn");
-
+  const profileBtn = document.getElementById("profileBtn");  
+  
   const modalBackdrop = document.getElementById("modalBackdrop");
   const modalTitle = document.getElementById("modalTitle");
   const modalBody = document.getElementById("modalBody");
@@ -1585,9 +1587,10 @@
   restartBtn.addEventListener("click", resetAllGameProgress);
 
   // ---- پاپ‌آپ‌ها ----
-  function showModal(title, body) {
+  function showModal(title, bodyHtml) {
     modalTitle.textContent = title;
-    modalBody.textContent = body;
+    // مهم: innerHTML تا لینک‌ها و <p> ها کار کنند
+    modalBody.innerHTML = bodyHtml;
     modalBackdrop.classList.add("active");
   }
   function hideModal() {
@@ -1598,50 +1601,67 @@
     if (e.target === modalBackdrop) hideModal();
   });
 
-  // دستاوردها به شکل آیتمی و جذاب
+  // ---- دستاوردها (خلاصه پیشرفت) ----
   achievementsBtn.addEventListener("click", () => {
     const unlockedCount = state.unlockedGames.size;
     const currentGame = gamesData.find(g => g.id === state.currentGameId);
     const currentGameTitle = currentGame ? currentGame.title : "—";
     const currentStageHuman = currentGame ? state.currentStage + 1 : "—";
 
-    const body =
-      `نام بازیکن: ${state.userName}\n` +
-      `امتیاز کل: ${state.totalStars}\n` +
-      `بازی فعلی: ${currentGameTitle}\n` +
-      `مرحله فعلی: ${currentStageHuman}\n` +
-      `بازی‌های باز شده: ${unlockedCount} از ۶\n\n` +
-      `🔥 هر جواب درست = یک ستاره.\n` +
-      `🎯 سعی کن رکورد امتیازت رو هر بار بهتر کنی!`;
-
+    const body = `
+      <p>سلام <strong>${state.userName}</strong> عزیز 🌱</p>
+      <p>امتیاز کل تو تا الان: <strong>${state.totalStars}</strong> ستاره ⭐</p>
+      <p>تعداد بازی‌های باز شده: <strong>${unlockedCount}</strong> از ${gamesData.length} بازی</p>
+      <p>بازی فعلی: <strong>${currentGameTitle}</strong></p>
+      <p>مرحله‌ای که الان توش هستی: <strong>${currentStageHuman}</strong></p>
+      <p style="margin-top:8px;">آروم و با دقت ادامه بده؛ رکوردای قشنگ‌تر در راهه 💪</p>
+    `;
     showModal("خلاصهٔ پیشرفتت تا الان", body);
   });
 
+  // ---- راهنما ----
   helpBtn.addEventListener("click", () => {
-    showModal(
-      "راهنمای بازی",
-      "۱) از فهرست، یک بازی رو انتخاب کن.\n" +
-      "۲) در هر مرحله، جواب درست رو انتخاب کن.\n" +
-      "۳) هر جواب درست = یک ستاره.\n" +
-      "۴) با سه اشتباه یا اتمام زمان، جان‌ها تموم می‌شن و بازی از اول شروع می‌شه.\n" +
-      "۵) با تمام کردن هر بازی، بازی بعدی باز می‌شه.\n" +
-      "۶) اگر خواستی همه‌چیز رو از صفر شروع کنی، از دکمه «شروع مجدد بازی» استفاده کن."
-    );
+    const body = `
+      <p>۱) از فهرست، یکی از بازی‌ها رو انتخاب کن.</p>
+      <p>۲) در هر مرحله، فقط یک گزینه جواب درسته؛ با دقت انتخابش کن.</p>
+      <p>۳) هر جواب درست = یک ستاره ⭐ و رفتن به مرحله بعد.</p>
+      <p>۴) با سه اشتباه یا تموم شدن زمان، جان‌هات تموم می‌شه و بازی از اول شروع می‌شه.</p>
+      <p>۵) وقتی یک بازی رو تا آخر بری، بازی بعدی برات باز می‌شه.</p>
+      <p>۶) اگر خواستی همه‌چیز رو از صفر شروع کنی، از دکمه «شروع مجدد بازی» در پایین صفحه استفاده کن.</p>
+    `;
+    showModal("راهنمای بازی", body);
   });
 
+  // ---- درباره ما + لینک طاویتا ----
   aboutBtn.addEventListener("click", () => {
-    showModal(
-      "درباره طاویتا",
-      "بازی‌های هوشیتا برای تمرین مغز، تمرکز، سرعت ذهن و حافظه طراحی شده.\n" +
-      "این برنامه توسط تیم طاویتا ساخته شده تا تمرین، شبیه یک بازی قشنگ و دوست‌داشتنی باشه."
-    );
+    const body = `
+      <p>هوشیتا یک بازی آموزشی و سرگرم‌کننده‌ست که با همکاری آکادمی <strong>طاویتا</strong> طراحی شده.</p>
+      <p>هدف ما اینه که با سوال‌های جذاب، هوش، تمرکز، اخلاق و آگاهی اجتماعی رو باهم تمرین کنیم؛ بدون استرس، شبیه یه بازی قشنگ و دوست‌داشتنی.</p>
+      <p>اگر دوست داری بازی‌ها و آموزش‌های جدید رو زودتر ببینی، می‌تونی عضو کانال رسمی طاویتا در ایتا بشی:</p>
+      <p style="text-align:center;margin-top:8px;">
+        <a href="https://eitaa.com/tavita" target="_blank"
+           style="color:#2563eb;font-weight:bold;text-decoration:none;">
+          ورود به کانال طاویتا در ایتا
+        </a>
+      </p>
+      <p style="margin-top:8px;">از همراهی‌ات با ما ممنونیم 💚</p>
+    `;
+    showModal("درباره هوشیتا و طاویتا", body);
   });
 
-  // شروع اولیه
-  initUser();
-  if (!onboardBackdrop.classList.contains("active")) {
-    renderGamesList();
-  }
+  // ---- پروفایل من (تغییر اسم و آواتار) ----
+  profileBtn.addEventListener("click", () => {
+    // همون پاپ‌آپ شروع رو دوباره باز می‌کنیم
+    showOnboarding();
+  });
+
+  // ---- شروع اولیه ----
+  window.addEventListener("load", () => {
+    initUser();
+    if (!onboardBackdrop.classList.contains("active")) {
+      renderGamesList();
+    }
+  });
 </script>
 </body>
 </html>
