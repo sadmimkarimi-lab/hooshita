@@ -1675,7 +1675,8 @@
         برای دیدن آموزش‌ها، دوره‌ها و بازی‌های جدید، می‌تونی عضو کانال رسمی طاویتا در ایتا بشی:
       </p>
       <p style="text-align:center;margin-top:8px;">
-        <a href="https://eitaa.com/tavita" target="_blank" style="color:#2563eb;font-weight:bold;text-decoration:none;">
+        <a href="https://eitaa.com/tavita" target="_blank"
+           style="color:#2563eb;font-weight:bold;text-decoration:none;">
           ورود به کانال طاویتا در ایتا
         </a>
       </p>
@@ -1684,13 +1685,16 @@
     showModal("درباره هوشیتا و طاویتا", body);
   });
 
-  // ---- شروع اولیه ----
+  // ---- شروع اولیه برنامه ----
   window.addEventListener("load", () => {
+    // لود اطلاعات کاربر (اسم + اواتار) و ست‌کردن روی صفحه
     initUser();
-  
-  if (!onboardBackdrop.classList.contains("active")) {
-    renderGamesList();
-  }
+
+    // اگر پاپ‌آپ انتخاب نام/اواتار باز نیست، لیست بازی‌ها رو نشون بده
+    if (!onboardBackdrop.classList.contains("active")) {
+      renderGamesList();
+    }
+  });
 </script>
 </body>
 </html>
