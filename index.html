@@ -525,20 +525,21 @@
     .modal {
       background: #ffffff;
       border-radius: 18px;
-      padding: 16px 18px;
-      max-width: 320px;
-      width: 90%;
+      padding: 14px 16px;
+      max-width: 300px;   /* کوچیک‌تر از قبل */
+      width: 88%;
       box-shadow: 0 14px 32px rgba(15, 23, 42, 0.3);
       font-size: 13px;
     }
     .modal h3 {
       margin: 0 0 8px;
-      font-size: 16px;
+      font-size: 15px;
+      text-align: right;
     }
     .modal p {
       margin: 4px 0;
       color: #4b5563;
-      line-height: 1.7;
+      line-height: 1.8;
       white-space: pre-line;
     }
     .modal-close {
@@ -552,7 +553,6 @@
       color: #fff;
       cursor: pointer;
     }
-
     /* -------- پاپ‌آپ شروع (نام + کاراکتر) -------- */
     .onboard-backdrop {
       position: fixed;
@@ -1565,11 +1565,13 @@
   // ---- پاپ‌آپ‌ها ----
   function showModal(title, bodyHtml) {
     modalTitle.textContent = title;
+
     modalBody.innerHTML = `
-      <div style="line-height:1.9; font-size:17px; text-align:right;">
+      <div style="line-height:1.8; font-size:14px; text-align:right;">
         ${bodyHtml}
       </div>
     `;
+
     modalBackdrop.classList.add("active");
   }
 
@@ -1614,19 +1616,12 @@
     showModal("راهنمای بازی", body);
   });
 
-  // ---- درباره ما + لینک طاویتا ----
+  // ---- درباره ما ----
   aboutBtn.addEventListener("click", () => {
     const body = `
-      <p>هوشیتا یک بازی آموزشی و سرگرم‌کننده‌ست که با همکاری آکادمی <strong>طاویتا</strong> طراحی شده.</p>
+      <p>هوشیتا یک بازی آموزشی و سرگرم‌کننده‌ست که با همکاری آکادمی <strong>طاویتا</strong> ساخته شده.</p>
       <p>هدف ما اینه که با سوال‌های جذاب، هوش، تمرکز، اخلاق و آگاهی اجتماعی رو باهم تمرین کنیم؛ بدون استرس، شبیه یه بازی قشنگ و دوست‌داشتنی.</p>
-      <p>اگر دوست داری بازی‌ها و آموزش‌های جدید رو زودتر ببینی، می‌تونی عضو کانال رسمی طاویتا در ایتا بشی:</p>
-      <p style="text-align:center;margin-top:8px;">
-        <a href="https://eitaa.com/tavita"
-           target="_blank"
-           style="color:#2563eb;font-weight:bold;text-decoration:none;">
-           ورود به کانال طاویتا در ایتا
-        </a>
-      </p>
+      <p>هوشیتا طوری طراحی شده که از کوچیک تا بزرگ بتونن باهاش ذهن‌شون رو تقویت کنن و از بازی لذت ببرن.</p>
       <p style="margin-top:8px;">از همراهی‌ات با ما ممنونیم 💚</p>
     `;
     showModal("درباره هوشیتا و طاویتا", body);
