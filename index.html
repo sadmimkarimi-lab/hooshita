@@ -72,21 +72,22 @@
       background: #e0e7ff;
     }
 
-    .logo {
-      width: 90px;
-      height: 90px;
-      border-radius: 50%;
-      border: 3px solid #ffffff;
-      box-shadow: 0 6px 14px rgba(15, 23, 42, 0.18);
-      background: #fff;
-      overflow: hidden;
-      flex-shrink: 0;
-    }
-    .logo img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
+ .logo {
+  border: none;
+  background: none;
+  border-radius: 0;
+  overflow: visible;
+  box-shadow: none;
+  width: auto;
+  height: auto;
+}
+
+.logo img {
+  width: 100px;   /* اگه کوچیک/بزرگ‌تر می‌خوای فقط عددشو بگو */
+  height: auto;
+  object-fit: contain;
+  border-radius: 0;
+}
 
     .header-title-wrap {
       display: flex;
@@ -510,49 +511,50 @@
     }
 
     /* -------- پاپ‌آپ عمومی -------- */
-    .modal-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(15, 23, 42, 0.4);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 20;
-    }
-    .modal-backdrop.active {
-      display: flex;
-    }
-    .modal {
-      background: #ffffff;
-      border-radius: 18px;
-      padding: 14px 16px;
-      max-width: 300px;   /* کوچیک‌تر از قبل */
-      width: 88%;
-      box-shadow: 0 14px 32px rgba(15, 23, 42, 0.3);
-      font-size: 13px;
-    }
-    .modal h3 {
-      margin: 0 0 8px;
-      font-size: 15px;
-      text-align: right;
-    }
-    .modal p {
-      margin: 4px 0;
-      color: #4b5563;
-      line-height: 1.8;
-      white-space: pre-line;
-    }
-    .modal-close {
-      margin-top: 10px;
-      width: 100%;
-      border-radius: 999px;
-      border: none;
-      padding: 8px 0;
-      font-size: 13px;
-      background: #4f46e5;
-      color: #fff;
-      cursor: pointer;
-    }
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.4);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+}
+.modal-backdrop.active {
+  display: flex;
+}
+.modal {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 10px 12px;        /* پدینگ کمتر = جمع‌وجورتر */
+  max-width: 240px;          /* عرض کمتر */
+  width: 82%;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.28);
+  font-size: 12px;           /* فونت کلی ریزتر */
+}
+.modal h3 {
+  margin: 0 0 6px;
+  font-size: 14px;           /* عنوان هم کمی ریزتر */
+  text-align: right;
+}
+.modal p {
+  margin: 3px 0;             /* فاصله بین خطوط کمتر */
+  color: #4b5563;
+  line-height: 1.6;
+  white-space: pre-line;
+}
+.modal-close {
+  margin-top: 8px;
+  width: 100%;
+  border-radius: 999px;
+  border: none;
+  padding: 7px 0;
+  font-size: 12px;
+  background: #4f46e5;
+  color: #fff;
+  cursor: pointer;
+}
+    
     /* -------- پاپ‌آپ شروع (نام + کاراکتر) -------- */
     .onboard-backdrop {
       position: fixed;
@@ -1564,16 +1566,16 @@
 
   // ---- پاپ‌آپ‌ها ----
   function showModal(title, bodyHtml) {
-    modalTitle.textContent = title;
+  modalTitle.textContent = title;
 
-    modalBody.innerHTML = `
-      <div style="line-height:1.8; font-size:14px; text-align:right;">
-        ${bodyHtml}
-      </div>
-    `;
+  modalBody.innerHTML = `
+    <div style="line-height:1.6; font-size:13px; text-align:right;">
+      ${bodyHtml}
+    </div>
+  `;
 
-    modalBackdrop.classList.add("active");
-  }
+  modalBackdrop.classList.add("active");
+}
 
   function hideModal() {
     modalBackdrop.classList.remove("active");
