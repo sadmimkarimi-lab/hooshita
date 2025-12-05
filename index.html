@@ -1783,19 +1783,72 @@
     }
   });
 
-  document.addEventListener("DOMContentLoaded", () => {
-  if (window.Eitaa && window.Eitaa.WebApp && window.Eitaa.WebApp.BackButton) {
+
+
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  const modalBackdrop   = document.getElementById("modalBackdrop");
+  const onboardBackdrop = document.getElementById("onboardBackdrop");
+  const gamesScreen     = document.getElementById("gamesScreen");
+  const gameScreen      = document.getElementById("gameScreen");
+
+  function handleBack() {
+    // ۱) اگر مودال عمومی باز است → ببند
+    if (modalBackdrop && modalBackdrop.classList.contains("active")) {
+      if (typeof hideModal === "function") {
+        hideModal();
+      } else {
+        modalBackdrop.classList.remove("active");
+      }
+      return;
+    }
+
+    // ۲) اگر آنبوردینگ باز است → ببند
+    if (onboardBackdrop && onboardBackdrop.classList.contains("active")) {
+      if (typeof hideOnboarding === "function") {
+        hideOnboarding();
+      } else {
+        onboardBackdrop.classList.remove("active");
+      }
+      return;
+    }
+
+    // ۳) اگر داخل صفحهٔ بازی هستیم → برگرد به فهرست
+    if (
+      gameScreen &&
+      !gameScreen.classList.contains("hidden") &&
+      typeof backToList === "function"
+    ) {
+      backToList();
+      return;
+    }
+
+    // ۴) در غیر این صورت، برنامک را ببند
+    if (
+      window.Eitaa &&
+      window.Eitaa.WebApp &&
+      typeof window.Eitaa.WebApp.close === "function"
+    ) {
+      window.Eitaa.WebApp.close();
+    }
+  }
+
+  if (
+    window.Eitaa &&
+    window.Eitaa.WebApp &&
+    window.Eitaa.WebApp.BackButton
+  ) {
     const backBtn = window.Eitaa.WebApp.BackButton;
     backBtn.show();
-    backBtn.onClick(() => {
-      try {
-        if (window.Eitaa.WebApp.close) {
-          window.Eitaa.WebApp.close();
-        }
-      } catch (e) {}
-    });
+    backBtn.onClick(handleBack);
+
+    if (typeof window.Eitaa.WebApp.onEvent === "function") {
+      window.Eitaa.WebApp.onEvent("backButtonClicked", handleBack);
+    }
   }
 });
+  
   
 </script>
 </body>
