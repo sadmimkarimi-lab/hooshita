@@ -1786,7 +1786,72 @@
 
 
 
+// ========= هندل کردن بک داخل هوشیتا =========
+  function handleBackAction() {
+    // ۱) اگر پاپ‌آپ باز است → فقط ببندیمش
+    if (typeof modalBackdrop !== "undefined" &&
+        modalBackdrop &&
+        modalBackdrop.classList.contains("active")) {
+      if (typeof hideModal === "function") {
+        hideModal();
+      }
+      return;
+    }
 
+    // ۲) اگر الان تو صفحهٔ بازی هستیم → برگرد به فهرست بازی‌ها
+    if (typeof gameScreen !== "undefined" &&
+        typeof gamesScreen !== "undefined" &&
+        gameScreen &&
+        gamesScreen &&
+        !gameScreen.classList.contains("hidden")) {
+      if (typeof backToList === "function") {
+        backToList();
+      }
+      return;
+    }
+
+    // ۳) اگر همین حالا در فهرست بازی‌ها هستیم، کاری نکن
+    // تا خود ایتا برنامک را کمینه/ببندد.
+  }
+
+  // ========= اتصال به Eitaa.WebApp.BackButton =========
+  function initEitaaBackButton() {
+    if (!window.Eitaa || !window.Eitaa.WebApp) {
+      console.log("Eitaa WebApp API not found");
+      return;
+    }
+
+    const webApp = window.Eitaa.WebApp;
+
+    // اعلام آماده بودن برنامک به ایتا (SDK)
+    if (typeof webApp.ready === "function") {
+      webApp.ready();
+    }
+
+    const backHandler = function () {
+      if (typeof handleBackAction === "function") {
+        handleBackAction();
+      }
+    };
+
+    // طبق مستندات: اول show، بعد onClick
+    if (webApp.BackButton) {
+      webApp.BackButton.show();
+      webApp.BackButton.onClick(backHandler);
+    }
+
+    // رویداد سراسری (اختیاری، ولی خوبه باشه)
+    if (typeof webApp.onEvent === "function") {
+      webApp.onEvent("backButtonClicked", backHandler);
+    }
+  }
+
+  // فعال کردن بک وقتی صفحه لود شد
+  if (document.readyState === "complete" || document.readyState === "interactive") {
+    initEitaaBackButton();
+  } else {
+    window.addEventListener("load", initEitaaBackButton);
+  }
 
   
   
