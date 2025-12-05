@@ -1783,7 +1783,19 @@
     }
   });
 
-  
+  document.addEventListener("DOMContentLoaded", () => {
+  if (window.Eitaa && window.Eitaa.WebApp && window.Eitaa.WebApp.BackButton) {
+    const backBtn = window.Eitaa.WebApp.BackButton;
+    backBtn.show();
+    backBtn.onClick(() => {
+      try {
+        if (window.Eitaa.WebApp.close) {
+          window.Eitaa.WebApp.close();
+        }
+      } catch (e) {}
+    });
+  }
+});
   
 </script>
 </body>
