@@ -1671,118 +1671,7 @@
 
 
 
-  // 👇 این بلوک رو آخر اسکریپت اضافه کن
-  document.addEventListener("DOMContentLoaded", () => {
-    // المان‌ها و پاپ‌آپ‌ها
-    const onboardBackdrop      = document.getElementById("onboardBackdrop");
-    const achievementsBackdrop = document.getElementById("achievementsBackdrop");
-    const achievementsPopup    = document.getElementById("achievementsPopup");
-    const helpBackdrop         = document.getElementById("helpBackdrop");
-    const helpPopup            = document.getElementById("helpPopup");
-    const modalBackdrop        = document.getElementById("modalBackdrop");   // برای showModal / hideModal
-    const gamesScreen          = document.getElementById("gamesScreen");
-    const gameScreen           = document.getElementById("gameScreen");
-
-    function handleBackAction() {
-      // ۱) اگر مودال عمومی بازه → ببند
-      if (modalBackdrop && modalBackdrop.classList.contains("active")) {
-        if (typeof hideModal === "function") hideModal();
-        return;
-      }
-
-      // ۲) اگر اچیومنت بازه → ببند
-      if (
-        achievementsBackdrop &&
-        !achievementsBackdrop.classList.contains("hidden")
-      ) {
-        if (typeof closeAchievements === "function") {
-          closeAchievements();
-        } else {
-          achievementsBackdrop.classList.add("hidden");
-          achievementsPopup?.classList.add("hidden");
-        }
-        return;
-      }
-
-      // ۳) اگر راهنما بازه → ببند
-      if (helpBackdrop && !helpBackdrop.classList.contains("hidden")) {
-        if (typeof closeHelp === "function") {
-          closeHelp();
-        } else {
-          helpBackdrop.classList.add("hidden");
-          helpPopup?.classList.add("hidden");
-        }
-        return;
-      }
-
-      // ۴) اگر آنبوردینگ بازه → ببند
-      if (onboardBackdrop && !onboardBackdrop.classList.contains("hidden")) {
-        if (typeof hideOnboarding === "function") {
-          hideOnboarding();
-        } else {
-          onboardBackdrop.classList.add("hidden");
-        }
-        return;
-      }
-
-      // ۵) اگر داخل صفحه‌ی بازی هستیم → برگرد به لیست بازی‌ها
-      if (
-        gamesScreen &&
-        gameScreen &&
-        !gameScreen.classList.contains("hidden")
-      ) {
-        gameScreen.classList.add("hidden");
-        gamesScreen.classList.remove("hidden");
-        return;
-      }
-
-      // ۶) در غیر این صورت، بذار ایتا خودش هندل کنه یا برنامک بسته بشه
-      if (window.Eitaa && window.Eitaa.WebApp) {
-        try {
-          // اگر متد close هست، برنامک رو ببند
-          if (typeof window.Eitaa.WebApp.close === "function") {
-            window.Eitaa.WebApp.close();
-          }
-        } catch (e) {
-          // در صورت خطا کاری نکنیم
-        }
-      }
-    }
-
-    // 🔹 فعال کردن دکمه Back ایتا مثل تانکیتا
-    try {
-      if (
-        window.Eitaa &&
-        window.Eitaa.WebApp &&
-        window.Eitaa.WebApp.BackButton
-      ) {
-        const backButton = window.Eitaa.WebApp.BackButton;
-        backButton.show();
-        backButton.onClick(handleBackAction);
-      }
-    } catch (e) {
-      console.log("Eitaa BackButton error:", e);
-    }
-
-    // 🔹 هندل کردن بک گوشی (history)
-    try {
-      // یک state الکی تا بک رو بگیریم
-      history.pushState({ tavita: "hooshita-root" }, "");
-
-      window.addEventListener("popstate", (ev) => {
-        // اول تلاش کنیم پاپ‌آپ‌ها و صفحه‌ی بازی رو مدیریت کنیم
-        handleBackAction();
-
-        // دوباره یک state جدید ثبت کن تا بک بعدی هم باز به همین جا بخوره
-        try {
-          history.pushState({ tavita: "hooshita-root" }, "");
-        } catch (e2) {}
-      });
-    } catch (e) {
-      console.log("history / back handling error:", e);
-    }
-  });
-
+  
 
 
 
