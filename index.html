@@ -254,16 +254,29 @@
       margin-bottom: 8px;
     }
 
-    .back-btn {
-      border-radius: 999px;
-      border: 1px solid #e5e7eb;
-      background: #ffffff;
-      padding: 6px 14px;
-      font-size: 12px;
-      cursor: pointer;
-      color: #374151;
-      order: 1;
-    }
+   .back-btn {
+  order: 1;
+  border: none;
+  border-radius: 999px;
+  padding: 7px 16px;
+  font-size: 12px;
+  cursor: pointer;
+  color: #fff;
+  background: linear-gradient(135deg, #f97316, #fb7185); /* نارنجی → گلبهی جذاب */
+  box-shadow: 0 6px 14px rgba(248, 113, 113, 0.35);
+  transition: transform 0.12s ease, box-shadow 0.12s ease, opacity 0.12s ease;
+}
+
+.back-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 9px 20px rgba(248, 113, 113, 0.45);
+  opacity: 0.95;
+}
+
+.back-btn:active {
+  transform: scale(0.97);
+  box-shadow: 0 4px 10px rgba(248, 113, 113, 0.4);
+}
 
     .game-title-area {
       display: flex;
@@ -663,7 +676,7 @@
       <!-- چپ: راهنما و درباره -->
 <div class="header-left">
   <button class="pill-btn" id="helpBtn">راهنمای بازی</button>
-  <button class="pill-btn" id="aboutBtn">درباره طاویتا</button>
+  <button class="pill-btn" id="aboutBtn">کانال طاویتا</button>
   <button class="pill-btn" id="profileBtn">پروفایل من</button>
 </div>
     </div>
@@ -794,6 +807,10 @@
   </div>
 </div>
 
+<script src="https://developer.eitaa.com/eitaa-web-app.js"></script>
+</head>
+
+  
 <script>
   // -------- داده‌های بازی‌ها --------
   const gamesData = [
@@ -1618,16 +1635,25 @@
     showModal("راهنمای بازی", body);
   });
 
-  // ---- درباره ما ----
-  aboutBtn.addEventListener("click", () => {
-    const body = `
-      <p>هوشیتا یک بازی آموزشی و سرگرم‌کننده‌ست که با همکاری آکادمی <strong>طاویتا</strong> ساخته شده.</p>
-      <p>هدف ما اینه که با سوال‌های جذاب، هوش، تمرکز، اخلاق و آگاهی اجتماعی رو باهم تمرین کنیم؛ بدون استرس، شبیه یه بازی قشنگ و دوست‌داشتنی.</p>
-      <p>هوشیتا طوری طراحی شده که از کوچیک تا بزرگ بتونن باهاش ذهن‌شون رو تقویت کنن و از بازی لذت ببرن.</p>
-      <p style="margin-top:8px;">از همراهی‌ات با ما ممنونیم 💚</p>
-    `;
-    showModal("درباره هوشیتا و طاویتا", body);
-  });
+  // ---- کانال طاویتا (به جای پاپ‌آپ درباره ما) ----
+  function openTavitaChannel() {
+    const url = "https://eitaa.com/tavita";
+
+    // اگر برنامک داخل ایتا باز شده باشد
+    if (window.Eitaa && window.Eitaa.WebApp && typeof window.Eitaa.WebApp.openEitaaLink === "function") {
+      try {
+        window.Eitaa.WebApp.openEitaaLink(url);
+        return;
+      } catch (e) {
+        console.warn("openEitaaLink failed, fallback to location", e);
+      }
+    }
+
+    // حالت عادی (مرورگر)
+    window.location.href = url;
+  }
+
+  aboutBtn.addEventListener("click", openTavitaChannel);
 
   // ---- پروفایل من (تغییر اسم و آواتار) ----
   profileBtn.addEventListener("click", () => {
