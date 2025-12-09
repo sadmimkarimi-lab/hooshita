@@ -1720,7 +1720,17 @@
 
 
 
+if (window.Eitaa && window.Eitaa.WebApp) {
+  try {
+    const wa = window.Eitaa.WebApp;
+    if (typeof wa.ready === "function") wa.ready();
+    if (typeof wa.expand === "function") wa.expand();
 
+    if (wa.BackButton && typeof wa.BackButton.onClick === "function") {
+      wa.BackButton.onClick(handleBackAction);
+    }
+  } catch (e) {}
+}
   
 
 
