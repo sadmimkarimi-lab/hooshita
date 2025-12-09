@@ -1178,6 +1178,52 @@
   const avatarButtons = document.querySelectorAll(".avatar-choice");
   let selectedAvatarUrl = avatarButtons[0]?.dataset.avatar || "";
 
+
+// ---- کمک برای تشخیص باز بودن هر پاپ‌آپ ----
+  function anyPopupOpen() {
+    return (
+      modalBackdrop.classList.contains("active") ||
+      onboardBackdrop.classList.contains("active")
+    );
+  }
+
+  // ---- نمایش / مخفی کردن بک‌باتن ایتا ----
+  function updateBackButtonUI() {
+    if (window.Eitaa && window.Eitaa.WebApp && window.Eitaa.WebApp.BackButton) {
+      const bb = window.Eitaa.WebApp.BackButton;
+      if (anyPopupOpen()) {
+        bb.show();
+      } else {
+        bb.hide();
+      }
+    }
+  }
+
+  // ---- بستن همه پاپ‌آپ‌ها ----
+  function closeAllPopups() {
+    modalBackdrop.classList.remove("active");
+    onboardBackdrop.classList.remove("active");
+    updateBackButtonUI();
+  }
+
+  // ---- رفتار دکمه برگشت ----
+  function handleBackAction() {
+    if (anyPopupOpen()) {
+      // اگر پاپ‌آپی باز است، فقط همان‌ها را ببند
+      closeAllPopups();
+    } else if (
+      window.Eitaa &&
+      window.Eitaa.WebApp &&
+      typeof window.Eitaa.WebApp.close === "function"
+    ) {
+      // اگر پاپ‌آپی نیست، خود وب‌اپ را ببند
+      window.Eitaa.WebApp.close();
+    } else if (window.history && typeof window.history.back === "function") {
+      window.history.back();
+    }
+  }
+
+  
   // تایمر
   let timerInterval = null;
   let timerRemaining = 0;
@@ -1232,9 +1278,11 @@
   function showOnboarding() {
     onboardNameInput.value = state.userName || "";
     onboardBackdrop.classList.add("active");
+    updateBackButtonUI();
   }
   function hideOnboarding() {
     onboardBackdrop.classList.remove("active");
+    updateBackButtonUI();
   }
 
   onboardConfirmBtn.addEventListener("click", () => {
@@ -1583,19 +1631,21 @@
 
   // ---- پاپ‌آپ‌ها ----
   function showModal(title, bodyHtml) {
-  modalTitle.textContent = title;
+    modalTitle.textContent = title;
 
-  modalBody.innerHTML = `
-    <div style="line-height:1.6; font-size:13px; text-align:right;">
-      ${bodyHtml}
-    </div>
-  `;
+    modalBody.innerHTML = `
+      <div style="line-height:1.6; font-size:13px; text-align:right;">
+        ${bodyHtml}
+      </div>
+    `;
 
-  modalBackdrop.classList.add("active");
-}
+    modalBackdrop.classList.add("active");
+    updateBackButtonUI();
+  }
 
   function hideModal() {
     modalBackdrop.classList.remove("active");
+    updateBackButtonUI();
   }
 
   modalCloseBtn.addEventListener("click", hideModal);
