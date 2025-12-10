@@ -1378,8 +1378,8 @@
     setCoachState("start");
 
     gamesScreen.classList.add("hidden");
-    gameScreen.classList.remove("hidden");
-
+gameScreen.classList.remove("hidden");
+updateBackButtonUI();
     updateGameUi();
   }
 
@@ -1623,9 +1623,68 @@
     currentGameLabel.textContent = "-";
     currentStageLabel.textContent = "-";
     renderGamesList();
+updateBackButtonUI();
   }
   backToListBtn.addEventListener("click", backToList);
 
+
+// =================== Eitaa Back Button ===================
+
+// آیا پاپ‌آپی باز است؟
+function anyPopupOpen() {
+  return (
+    modalBackdrop.classList.contains("active") ||
+    onboardBackdrop.classList.contains("active")
+  );
+}
+
+// آپدیت کردن وضعیت بک‌باتن
+function updateBackButtonUI() {
+  if (!(window.Eitaa && window.Eitaa.WebApp && window.Eitaa.WebApp.BackButton)) return;
+  const bb = window.Eitaa.WebApp.BackButton;
+
+  // اگر پاپ‌آپ باز است یا داخل صفحهٔ بازی هستیم → بک‌باتن دیده شود
+  if (anyPopupOpen() || !gameScreen.classList.contains("hidden")) {
+    bb.show();
+  } else {
+    bb.hide();
+  }
+}
+
+// وقتی روی بک زده می‌شود چه اتفاقی بیفتد؟
+function handleBackAction() {
+  // ۱) اگر پاپ‌آپی باز است، اول همان را ببند
+  if (anyPopupOpen()) {
+    hideModal();
+    hideOnboarding();
+    updateBackButtonUI();
+    return;
+  }
+
+  // ۲) اگر در صفحهٔ بازی هستیم، برگرد به فهرست بازی‌ها
+  if (!gameScreen.classList.contains("hidden")) {
+    backToList();
+    updateBackButtonUI();
+    return;
+  }
+
+  // ۳) اگر در فهرست اصلی هستیم، اپ را ببند / صفحهٔ قبل
+  if (window.Eitaa && window.Eitaa.WebApp && typeof window.Eitaa.WebApp.close === "function") {
+    window.Eitaa.WebApp.close();
+  } else if (window.history && typeof window.history.back === "function") {
+    window.history.back();
+  }
+}
+
+// برای مرورگر (خارج از ایتا)
+if (window.history && typeof window.history.pushState === "function") {
+  window.addEventListener("popstate", function () {
+    if (typeof handleBackAction === "function") handleBackAction();
+  });
+}
+
+
+  
   // ---- شروع مجدد از فوتر (ریست کامل) ----
   restartBtn.addEventListener("click", resetAllGameProgress);
 
@@ -1720,6 +1779,7 @@
 
 
 
+// اتصال به WebApp ایتا
 if (window.Eitaa && window.Eitaa.WebApp) {
   try {
     const wa = window.Eitaa.WebApp;
@@ -1729,12 +1789,11 @@ if (window.Eitaa && window.Eitaa.WebApp) {
     if (wa.BackButton && typeof wa.BackButton.onClick === "function") {
       wa.BackButton.onClick(handleBackAction);
     }
+
+    // وضعیت اولیه بک‌باتن
+    updateBackButtonUI();
   } catch (e) {}
 }
-  
-
-
-
 
   
   
