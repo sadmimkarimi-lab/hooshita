@@ -1437,11 +1437,18 @@ loadProgress();
 
     clearInterval(timerInterval);
 
-    state.currentGameId = gameId;
-    state.currentStage = 0;
-    state.hearts = 3;
-    state.gameStars = 0;
+    const wasSameGame = (state.currentGameId === gameId && state.currentStage > 0);
+
+state.currentGameId = gameId;
+
+if (!wasSameGame) {
+  state.currentStage = 0;
+  state.hearts = 3;
+  state.gameStars = 0;
+}
+
 saveProgress();
+    
     gameTitleEl.textContent = game.title;
     gameSubtitleEl.textContent = game.subtitle;
 
@@ -1696,7 +1703,7 @@ updateBackButtonUI();
   // ---- برگشت به فهرست ----
   function backToList() {
     clearInterval(timerInterval);
-    state.currentGameId = null;
+    // state.currentGameId = null;
     gameScreen.classList.add("hidden");
     gamesScreen.classList.remove("hidden");
     currentGameLabel.textContent = "-";
