@@ -1145,81 +1145,40 @@
   const USER_KEY = "hoshitaUserName";
   const AVATAR_KEY = "hoshitaAvatarUrl";
 
-  const PROGRESS_KEY = "hoshitaProgressV1";
-
-  function saveProgress() {
-    try {
-      const data = {
-        totalStars: state.totalStars,
-        unlockedGames: Array.from(state.unlockedGames),
-        currentGameId: state.currentGameId,
-        currentStage: state.currentStage,
-        hearts: state.hearts,
-        gameStars: state.gameStars
-      };
-      localStorage.setItem(PROGRESS_KEY, JSON.stringify(data));
-    } catch (e) {}
-  }
-
-  function loadProgress() {
-    try {
-      const raw = localStorage.getItem(PROGRESS_KEY);
-      if (!raw) return;
-      const data = JSON.parse(raw);
-
-      // همیشه حداقل بازی ۱ باید باز باشد
-      state.unlockedGames = new Set([1]);
-
-      if (typeof data.totalStars === "number") state.totalStars = data.totalStars;
-
-      if (Array.isArray(data.unlockedGames)) {
-        data.unlockedGames.forEach(id => state.unlockedGames.add(id));
-      }
-
-      // قفل/باز بودن کارت‌ها را با set هماهنگ کن
-      gamesData.forEach(g => {
-        g.locked = !state.unlockedGames.has(g.id);
-      });
-
-      if (data.currentGameId !== null && data.currentGameId !== undefined) {
-        state.currentGameId = data.currentGameId;
-        if (typeof data.currentStage === "number") state.currentStage = data.currentStage;
-        if (typeof data.hearts === "number") state.hearts = data.hearts;
-        if (typeof data.gameStars === "number") state.gameStars = data.gameStars;
-      }
-    } catch (e) {}
-  }
-
-  // قبل از خروج/بستن صفحه، آخرین وضعیت ذخیره شود
-  window.addEventListener("beforeunload", saveProgress);
-
   // المنت‌ها
   const gamesGrid = document.getElementById("gamesGrid");
   const gamesScreen = document.getElementById("gamesScreen");
   const gameScreen = document.getElementById("gameScreen");
 
-  const totalStarsEl = document.getElementById("totalStarsEl");
-  const userNameEl = document.getElementById("userNameEl");
-  const playerAvatarEl = document.getElementById("playerAvatarEl");
+  const userNameEl = document.getElementById("userName");
+  const totalStarsEl = document.getElementById("totalStars");
+  const currentGameLabel = document.getElementById("currentGameLabel");
+  const currentStageLabel = document.getElementById("currentStageLabel");
 
   const gameTitleEl = document.getElementById("gameTitle");
   const gameSubtitleEl = document.getElementById("gameSubtitle");
-  const currentGameLabel = document.getElementById("currentGameLabel");
-  const currentStageLabel = document.getElementById("currentStageLabel");
-  const stageQuestionEl = document.getElementById("stageQuestion");
-  const optionsWrapEl = document.getElementById("optionsWrap");
+  const coachImgEl = document.getElementById("coachImg");
+  const coachTextEl = document.getElementById("coachText");
 
-  const timerBarInner = document.getElementById("timerBarInner");
-  const timeLeftEl = document.getElementById("timeLeft");
-  const gameStarsEl = document.getElementById("gameStarsEl");
-  const heartsCountEl = document.getElementById("heartsCountEl");
+  const playerAvatarEl = document.getElementById("playerAvatar");
+
+  const heartsCountEl = document.getElementById("heartsCount");
+  const gameStarsEl = document.getElementById("gameStars");
+  const starStatEl = document.getElementById("starStat");
+  const heartStatEl = document.getElementById("heartStat");
+
+  const questionTextEl = document.getElementById("questionText");
+  const optionsContainer = document.getElementById("optionsContainer");
+  const progressInner = document.getElementById("progressInner");
+  const stageLabelBottom = document.getElementById("stageLabelBottom");
+  const timerValueEl = document.getElementById("timerValue");
 
   const backToListBtn = document.getElementById("backToListBtn");
   const restartBtn = document.getElementById("restartBtn");
-  const resetAllBtn = document.getElementById("resetAllBtn");
 
   const achievementsBtn = document.getElementById("achievementsBtn");
   const helpBtn = document.getElementById("helpBtn");
+  const aboutBtn = document.getElementById("aboutBtn");
   const profileBtn = document.getElementById("profileBtn");
 
   const modalBackdrop = document.getElementById("modalBackdrop");
@@ -1227,36 +1186,118 @@
   const modalBody = document.getElementById("modalBody");
   const modalCloseBtn = document.getElementById("modalCloseBtn");
 
-  // ---- onboarding ----
+  // پاپ‌آپ شروع
   const onboardBackdrop = document.getElementById("onboardBackdrop");
   const onboardNameInput = document.getElementById("onboardNameInput");
-  const avatarButtons = Array.from(document.querySelectorAll(".avatar-btn"));
   const onboardConfirmBtn = document.getElementById("onboardConfirmBtn");
+  const avatarButtons = document.querySelectorAll(".avatar-choice");
+  let selectedAvatarUrl = avatarButtons[0]?.dataset.avatar || "";
 
-  let selectedAvatarUrl = "";
 
-  function showOnboarding() {
-    onboardBackdrop.classList.add("active");
+// ---- کمک برای تشخیص باز بودن هر پاپ‌آپ ----
+  function anyPopupOpen() {
+    return (
+      modalBackdrop.classList.contains("active") ||
+      onboardBackdrop.classList.contains("active")
+    );
   }
 
-  function hideOnboarding() {
+  // ---- نمایش / مخفی کردن بک‌باتن ایتا ----
+  function updateBackButtonUI() {
+    if (window.Eitaa && window.Eitaa.WebApp && window.Eitaa.WebApp.BackButton) {
+      const bb = window.Eitaa.WebApp.BackButton;
+      if (anyPopupOpen()) {
+        bb.show();
+      } else {
+        bb.hide();
+      }
+    }
+  }
+
+  // ---- بستن همه پاپ‌آپ‌ها ----
+  function closeAllPopups() {
+    modalBackdrop.classList.remove("active");
     onboardBackdrop.classList.remove("active");
+    updateBackButtonUI();
   }
 
+  // ---- رفتار دکمه برگشت ----
+  function handleBackAction() {
+    if (anyPopupOpen()) {
+      // اگر پاپ‌آپی باز است، فقط همان‌ها را ببند
+      closeAllPopups();
+    } else if (
+      window.Eitaa &&
+      window.Eitaa.WebApp &&
+      typeof window.Eitaa.WebApp.close === "function"
+    ) {
+      // اگر پاپ‌آپی نیست، خود وب‌اپ را ببند
+      window.Eitaa.WebApp.close();
+    } else if (window.history && typeof window.history.back === "function") {
+      window.history.back();
+    }
+  }
+
+  
+  // تایمر
+  let timerInterval = null;
+  let timerRemaining = 0;
+
+  // ایندکس گزینهٔ درست بعد از شافل
+  let currentCorrectIndex = 0;
+
+  // --- ۶ حالت مربی: برای هر حالت یک عکس و یک متن ---
+  const coachStates = {
+    start: {
+      img: "https://cdnfa.com/irangiah/a9be/uploads/bazi2/mehraban.webp",
+      text: "آروم باش، با دقت جواب بده. هر مرحله که جلو بری، ستاره می‌گیری! 🌟"
+    },
+    correct: {
+      img: "https://cdnfa.com/irangiah/a9be/uploads/bazi2/tashvigh.webp",
+      text: "آفرین! یه قدم دیگه جلو رفتی. برو بعدی 👏"
+    },
+    wrong: {
+      img: "https://cdnfa.com/irangiah/a9be/uploads/bazi2/tekrar.webp",
+      text: "اشکالی نداره، دوباره تلاش کن. این‌بار دقیق‌تر نگاه کن."
+    },
+    timeout: {
+      img: "https://cdnfa.com/irangiah/a9be/uploads/bazi2/jeddi.webp",
+      text: "وقتت تموم شد! این‌بار سریع‌تر جواب بده ⏱"
+    },
+    gameComplete: {
+      img: "https://cdnfa.com/irangiah/a9be/uploads/bazi2/haiajan.webp",
+      text: "عالی بود! همه مراحل این بازی رو رد کردی. برو سراغ بازی بعدی 💪"
+    },
+    gameOver: {
+      img: "https://cdnfa.com/irangiah/a9be/uploads/bazi2/delsooz.webp",
+      text: "جان‌هات تموم شد؛ از نو شروع کن، این‌بار بهتر می‌زنی 😎"
+    }
+  };
+
+  function setCoachState(stateKey) {
+    const cfg = coachStates[stateKey];
+    if (!cfg) return;
+    if (cfg.img) coachImgEl.src = cfg.img;
+    if (cfg.text) coachTextEl.textContent = cfg.text;
+  }
+
+  // ---- انتخاب کاراکتر در پاپ‌آپ شروع ----
   avatarButtons.forEach(btn => {
     btn.addEventListener("click", () => {
-      avatarButtons.forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
+      avatarButtons.forEach(b => b.classList.remove("selected"));
+      btn.classList.add("selected");
       selectedAvatarUrl = btn.dataset.avatar;
-      playerAvatarEl.src = selectedAvatarUrl;
     });
   });
 
-  // پیش‌فرض: اولین آواتار
-  if (avatarButtons[0]) {
-    avatarButtons[0].classList.add("active");
-    selectedAvatarUrl = avatarButtons[0].dataset.avatar;
-    playerAvatarEl.src = selectedAvatarUrl;
+  function showOnboarding() {
+    onboardNameInput.value = state.userName || "";
+    onboardBackdrop.classList.add("active");
+    updateBackButtonUI();
+  }
+  function hideOnboarding() {
+    onboardBackdrop.classList.remove("active");
+    updateBackButtonUI();
   }
 
   onboardConfirmBtn.addEventListener("click", () => {
@@ -1291,10 +1332,6 @@
         selectedAvatarUrl = avatarButtons[0]?.dataset.avatar || selectedAvatarUrl;
         playerAvatarEl.src = selectedAvatarUrl;
       }
-
-      loadProgress();
-      updateGlobalStats();
-
       if (!savedName) {
         showOnboarding();
       }
@@ -1359,75 +1396,94 @@
 gameScreen.classList.remove("hidden");
 updateBackButtonUI();
     updateGameUi();
-    saveProgress();
   }
 
   // ---- تایمر مرحله ----
-  let timerInterval = null;
-  let timeLeft = 15;
-
   function startTimerForStage(game) {
     clearInterval(timerInterval);
-    timeLeft = game.stageTime || 15;
-    timeLeftEl.textContent = timeLeft.toString();
-    timerBarInner.style.width = "100%";
-
+    const baseSec = game.timePerStageSec || 10;
+    timerRemaining = baseSec;
+    updateTimerLabel();
     timerInterval = setInterval(() => {
-      timeLeft--;
-      timeLeftEl.textContent = timeLeft.toString();
-      const pct = Math.max(0, Math.round((timeLeft / (game.stageTime || 15)) * 100));
-      timerBarInner.style.width = pct + "%";
-      if (timeLeft <= 0) {
+      timerRemaining--;
+      if (timerRemaining <= 0) {
         clearInterval(timerInterval);
         handleTimeout();
+      } else {
+        updateTimerLabel();
       }
     }, 1000);
   }
 
-  // ---- آپدیت UI بازی ----
-  let currentCorrectIndex = 0;
-  let answeringLocked = false;
+  function updateTimerLabel() {
+    timerValueEl.textContent = `${timerRemaining} ثانیه ⏳`;
+  }
 
+  // ---- آپدیت UI بازی + شافل گزینه‌ها ----
   function updateGameUi() {
     const game = gamesData.find(g => g.id === state.currentGameId);
     if (!game) return;
 
-    const stage = game.stages[state.currentStage];
-    if (!stage) return;
+    const stageCount = game.stages.length;
+    const currentStageIndex = Math.max(0, Math.min(state.currentStage, stageCount - 1));
+    const stageData = game.stages[currentStageIndex];
 
     currentGameLabel.textContent = game.title;
-    currentStageLabel.textContent = (state.currentStage + 1).toString();
+    currentStageLabel.textContent = `${currentStageIndex + 1} از ${stageCount}`;
 
-    stageQuestionEl.textContent = stage.q;
-    optionsWrapEl.innerHTML = "";
+    heartsCountEl.textContent = state.hearts.toString();
+    gameStarsEl.textContent = state.gameStars.toString();
 
-    stage.options.forEach((opt, index) => {
+    stageLabelBottom.textContent = `مرحله ${currentStageIndex + 1} از ${stageCount}`;
+
+    const progress = (currentStageIndex / stageCount) * 100;
+    progressInner.style.width = `${progress}%`;
+
+    questionTextEl.textContent = stageData.q;
+
+    // ساخت آرایهٔ گزینه‌ها با ایندکس اصلی
+    const originalOptions = stageData.options.map((text, idx) => ({
+      text,
+      originalIndex: idx
+    }));
+
+    // کپی و شافل با فیشر–ییتس
+    const shuffled = [...originalOptions];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      const temp = shuffled[i];
+      shuffled[i] = shuffled[j];
+      shuffled[j] = temp;
+    }
+
+    // پیدا کردن جای جدید گزینهٔ درست
+    currentCorrectIndex = shuffled.findIndex(opt => opt.originalIndex === stageData.correct);
+
+    // ساخت دکمه‌ها براساس گزینه‌های شافل شده
+    optionsContainer.innerHTML = "";
+    shuffled.forEach((opt, btnIndex) => {
       const btn = document.createElement("button");
-      btn.type = "button";
       btn.className = "option-btn";
-      btn.textContent = opt;
-      btn.addEventListener("click", () => handleAnswer(index));
-      optionsWrapEl.appendChild(btn);
+      btn.textContent = opt.text;
+      btn.addEventListener("click", () => handleAnswer(btnIndex));
+      optionsContainer.appendChild(btn);
     });
 
-    currentCorrectIndex = stage.correct;
-    answeringLocked = false;
-
     startTimerForStage(game);
-    updateGlobalStats();
   }
 
-  // ---- جواب دادن ----
+  // ---- پاسخ کاربر ----
+  let answeringLocked = false;
+
   function handleAnswer(index) {
     if (answeringLocked) return;
-    answeringLocked = true;
-
     const game = gamesData.find(g => g.id === state.currentGameId);
     if (!game) return;
 
     clearInterval(timerInterval);
 
-    const optionButtons = Array.from(optionsWrapEl.querySelectorAll(".option-btn"));
+    const optionButtons = Array.from(document.querySelectorAll(".option-btn"));
+    answeringLocked = true;
 
     // پاک کردن حالت‌های قبلی
     optionButtons.forEach(btn => {
@@ -1535,7 +1591,6 @@ updateBackButtonUI();
     // وقتی از اول شروع می‌کند، مربی دوباره حالت start بگیرد
     setCoachState("start");
     updateGameUi();
-    saveProgress();
   }
 
   function unlockNextGame() {
@@ -1547,7 +1602,6 @@ updateBackButtonUI();
         state.unlockedGames.add(nextGame.id);
       }
       renderGamesList();
-      saveProgress();
     }
   }
 
@@ -1555,8 +1609,6 @@ updateBackButtonUI();
     totalStarsEl.textContent = state.totalStars.toString();
     gameStarsEl.textContent = state.gameStars.toString();
     heartsCountEl.textContent = state.hearts.toString();
-
-    saveProgress();
   }
 
   // ---- ریست کامل بازی ----
@@ -1575,32 +1627,10 @@ updateBackButtonUI();
 
     updateGlobalStats();
     backToList();
-    saveProgress();
   }
 
-  // ---- مودال ----
-  function showModal(title, bodyHtml) {
-    modalTitle.textContent = title;
-    modalBody.innerHTML = bodyHtml;
-    modalBackdrop.classList.add("active");
-  }
-
-  function hideModal() {
-    modalBackdrop.classList.remove("active");
-  }
-
-  modalCloseBtn.addEventListener("click", hideModal);
-  modalBackdrop.addEventListener("click", (e) => {
-    if (e.target === modalBackdrop) hideModal();
-  });
-
-  function closeAllPopups() {
-    hideModal();
-    hideOnboarding();
-  }
-
-  // ---- برگشت به لیست ----
-function backToList() {
+  // ---- برگشت به فهرست ----
+  function backToList() {
     clearInterval(timerInterval);
     state.currentGameId = null;
     gameScreen.classList.add("hidden");
@@ -1608,118 +1638,159 @@ function backToList() {
     currentGameLabel.textContent = "-";
     currentStageLabel.textContent = "-";
     renderGamesList();
-    updateBackButtonUI();
-    saveProgress();
+updateBackButtonUI();
   }
   backToListBtn.addEventListener("click", backToList);
 
 
 // =================== Eitaa Back Button ===================
 
-// 
-// 👈 این بخش مخصوص ایتاست و باعث میشه وقتی کاربر روی Back ایتا زد:
-// ۱) اگر مودال بازه، فقط مودال بسته بشه
-// ۲) اگر داخل صفحه بازی هستیم، برگرده به لیست بازی‌ها
-// ۳) اگر در لیست هستیم، اپ بسته بشه (یا تاریخچه یک قدم عقب بره)
-
+// آیا پاپ‌آپی باز است؟
 function anyPopupOpen() {
-  return modalBackdrop.classList.contains("active") || onboardBackdrop.classList.contains("active");
+  return (
+    modalBackdrop.classList.contains("active") ||
+    onboardBackdrop.classList.contains("active")
+  );
 }
 
-function handleBackAction() {
-  // ۱) اگر هر پاپ‌آپی بازه، فقط پاپ‌آپ‌ها رو ببند
-  if (anyPopupOpen()) {
-    closeAllPopups();
-    return;
-  }
-
-  // ۲) اگر داخل صفحه بازی هستیم، برگرد به لیست
-  if (!gameScreen.classList.contains("hidden")) {
-    backToList();
-    return;
-  }
-
-  // ۳) اگر در فهرست اصلی هستیم، اپ را ببند / صفحهٔ قبل
-  try {
-    if (window.Eitaa && window.Eitaa.WebApp && typeof window.Eitaa.WebApp.close === "function") {
-      window.Eitaa.WebApp.close();
-    } else {
-      window.history.back();
-    }
-  } catch (e) {
-    window.history.back();
-  }
-}
-
-// وقتی از داخل مرورگر (نه ایتا) back زد
-window.addEventListener("popstate", () => {
-  handleBackAction();
-});
-
-// کنترل نمایش دکمه بک ایتا (اگر API موجود بود)
+// آپدیت کردن وضعیت بک‌باتن
 function updateBackButtonUI() {
   if (!(window.Eitaa && window.Eitaa.WebApp && window.Eitaa.WebApp.BackButton)) return;
   const bb = window.Eitaa.WebApp.BackButton;
 
-  // اگر مودال بازه یا داخل بازی هستیم، بک نمایش داده شود
-  const shouldShow = anyPopupOpen() || !gameScreen.classList.contains("hidden");
+  // اگر پاپ‌آپ باز است یا داخل صفحهٔ بازی هستیم → بک‌باتن دیده شود
+  if (anyPopupOpen() || !gameScreen.classList.contains("hidden")) {
+    bb.show();
+  } else {
+    bb.hide();
+  }
+}
 
-  try {
-    if (shouldShow) {
-      if (typeof bb.show === "function") bb.show();
-    } else {
-      if (typeof bb.hide === "function") bb.hide();
-    }
-  } catch (e) {}
+// وقتی روی بک زده می‌شود چه اتفاقی بیفتد؟
+function handleBackAction() {
+  // ۱) اگر پاپ‌آپی باز است، اول همان را ببند
+  if (anyPopupOpen()) {
+    hideModal();
+    hideOnboarding();
+    updateBackButtonUI();
+    return;
+  }
+
+  // ۲) اگر در صفحهٔ بازی هستیم، برگرد به فهرست بازی‌ها
+  if (!gameScreen.classList.contains("hidden")) {
+    backToList();
+    updateBackButtonUI();
+    return;
+  }
+
+  // ۳) اگر در فهرست اصلی هستیم، اپ را ببند / صفحهٔ قبل
+  if (window.Eitaa && window.Eitaa.WebApp && typeof window.Eitaa.WebApp.close === "function") {
+    window.Eitaa.WebApp.close();
+  } else if (window.history && typeof window.history.back === "function") {
+    window.history.back();
+  }
+}
+
+// برای مرورگر (خارج از ایتا)
+if (window.history && typeof window.history.pushState === "function") {
+  window.addEventListener("popstate", function () {
+    if (typeof handleBackAction === "function") handleBackAction();
+  });
 }
 
 
+  
+  // ---- شروع مجدد از فوتر (ریست کامل) ----
+  restartBtn.addEventListener("click", resetAllGameProgress);
 
-// ---- دکمه‌ها ----
-restartBtn.addEventListener("click", () => {
-  resetCurrentGameOnly();
-});
+  // ---- پاپ‌آپ‌ها ----
+  function showModal(title, bodyHtml) {
+    modalTitle.textContent = title;
 
-resetAllBtn.addEventListener("click", () => {
-  resetAllGameProgress();
-  showModal("همه‌چیز ریست شد ✅", "<p>همهٔ پیشرفت‌ها پاک شد و از اول شروع می‌کنیم 🙂</p>");
-});
+    modalBody.innerHTML = `
+      <div style="line-height:1.6; font-size:13px; text-align:right;">
+        ${bodyHtml}
+      </div>
+    `;
 
-achievementsBtn.addEventListener("click", () => {
-  const unlockedCount = state.unlockedGames.size;
-  const body = `
-    <p>⭐ مجموع ستاره‌ها: <strong>${state.totalStars}</strong></p>
-    <p>🎮 تعداد بازی‌های باز شده: <strong>${unlockedCount}</strong></p>
-    <p>ادامه بده قهرمان 😉🔥</p>
-  `;
-  showModal("خلاصهٔ پیشرفتت تا الان", body);
-});
-
-// ---- راهنما ----
-helpBtn.addEventListener("click", () => {
-  const body = `
-    <p>۱) از فهرست، یکی از بازی‌ها رو انتخاب کن.</p>
-    <p>۲) در هر مرحله، فقط یک گزینه جواب درسته؛ با دقت انتخابش کن.</p>
-    <p>۳) هر جواب درست = یک ستاره ⭐ و رفتن به مرحله بعد.</p>
-    <p>۴) با سه اشتباه یا تموم شدن زمان، جان‌هات تموم می‌شه و بازی از اول شروع می‌شه.</p>
-    <p>۵) وقتی یک بازی رو تا آخر بری، بازی بعدی برات باز می‌شه.</p>
-    <p>۶) اگر خواستی همه‌چیز رو از صفر شروع کنی، از دکمه «شروع مجدد بازی» در پایین صفحه استفاده کن.</p>
-  `;
-  showModal("راهنمای بازی", body);
-});
-
-// ---- پروفایل من (تغییر اسم و آواتار) ----
-profileBtn.addEventListener("click", () => {
-  showOnboarding();
-});
-
-// ---- شروع اولیه ----
-window.addEventListener("load", () => {
-  initUser();
-  if (!onboardBackdrop.classList.contains("active")) {
-    renderGamesList();
+    modalBackdrop.classList.add("active");
+    updateBackButtonUI();
   }
-});
+
+  function hideModal() {
+    modalBackdrop.classList.remove("active");
+    updateBackButtonUI();
+  }
+
+  modalCloseBtn.addEventListener("click", hideModal);
+
+  modalBackdrop.addEventListener("click", (e) => {
+    if (e.target === modalBackdrop) hideModal();
+  });
+
+  // ---- دستاوردها (خلاصه پیشرفت) ----
+  achievementsBtn.addEventListener("click", () => {
+    const unlockedCount = state.unlockedGames.size;
+    const currentGame = gamesData.find(g => g.id === state.currentGameId);
+    const currentGameTitle = currentGame ? currentGame.title : "—";
+    const currentStageHuman = currentGame ? state.currentStage + 1 : "—";
+
+    const body = `
+      <p>سلام <strong>${state.userName}</strong> عزیز 🌱</p>
+      <p>امتیاز کل تو تا الان: <strong>${state.totalStars}</strong> ستاره ⭐</p>
+      <p>تعداد بازی‌های باز شده: <strong>${unlockedCount}</strong> از ${gamesData.length} بازی</p>
+      <p>بازی فعلی: <strong>${currentGameTitle}</strong></p>
+      <p>مرحله‌ای که الان توش هستی: <strong>${currentStageHuman}</strong></p>
+      <p style="margin-top:8px;">آروم و با دقت ادامه بده؛ رکوردای قشنگ‌تر در راهه 💪</p>
+    `;
+    showModal("خلاصهٔ پیشرفتت تا الان", body);
+  });
+
+  // ---- راهنما ----
+  helpBtn.addEventListener("click", () => {
+    const body = `
+      <p>۱) از فهرست، یکی از بازی‌ها رو انتخاب کن.</p>
+      <p>۲) در هر مرحله، فقط یک گزینه جواب درسته؛ با دقت انتخابش کن.</p>
+      <p>۳) هر جواب درست = یک ستاره ⭐ و رفتن به مرحله بعد.</p>
+      <p>۴) با سه اشتباه یا تموم شدن زمان، جان‌هات تموم می‌شه و بازی از اول شروع می‌شه.</p>
+      <p>۵) وقتی یک بازی رو تا آخر بری، بازی بعدی برات باز می‌شه.</p>
+      <p>۶) اگر خواستی همه‌چیز رو از صفر شروع کنی، از دکمه «شروع مجدد بازی» در پایین صفحه استفاده کن.</p>
+    `;
+    showModal("راهنمای بازی", body);
+  });
+
+  // ---- کانال طاویتا (به جای پاپ‌آپ درباره ما) ----
+  function openTavitaChannel() {
+    const url = "https://eitaa.com/tavita";
+
+    // اگر برنامک داخل ایتا باز شده باشد
+    if (window.Eitaa && window.Eitaa.WebApp && typeof window.Eitaa.WebApp.openEitaaLink === "function") {
+      try {
+        window.Eitaa.WebApp.openEitaaLink(url);
+        return;
+      } catch (e) {
+        console.warn("openEitaaLink failed, fallback to location", e);
+      }
+    }
+
+    // حالت عادی (مرورگر)
+    window.location.href = url;
+  }
+
+  aboutBtn.addEventListener("click", openTavitaChannel);
+
+  // ---- پروفایل من (تغییر اسم و آواتار) ----
+  profileBtn.addEventListener("click", () => {
+    showOnboarding();
+  });
+
+  // ---- شروع اولیه ----
+  window.addEventListener("load", () => {
+    initUser();
+    if (!onboardBackdrop.classList.contains("active")) {
+      renderGamesList();
+    }
+  });
 
 
 
