@@ -4,10 +4,20 @@
   <meta charset="UTF-8" />
   <title>بازی هوشیتا</title>
   <style>
-    * {
-      box-sizing: border-box;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "IRANSans", sans-serif;
-    }
+@font-face {
+  font-family: "Yekan";
+  src:
+    url("https://cdnfa.com/irangiah/a9be/uploads/bazi/yekan.ttf") format("truetype"),
+    url("https://cdnfa.com/irangiah/a9be/uploads/bazi/yekan.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+* {
+  box-sizing: border-box;
+  font-family: "Yekan", sans-serif !important;
+}
     body {
       margin: 0;
       background: radial-gradient(circle at top, #f5f7ff, #eef2ff);
