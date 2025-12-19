@@ -1145,6 +1145,55 @@
   const USER_KEY = "hoshitaUserName";
   const AVATAR_KEY = "hoshitaAvatarUrl";
 
+
+// -------- ذخیره/بازیابی پیشرفت بازی --------
+  const PROGRESS_KEY = "hoshitaGameProgress_v1";
+
+  function saveProgress() {
+    try {
+      const payload = {
+        totalStars: state.totalStars,
+        unlockedGames: Array.from(state.unlockedGames),
+        currentGameId: state.currentGameId,
+        currentStage: state.currentStage,
+        hearts: state.hearts,
+        gameStars: state.gameStars
+      };
+      localStorage.setItem(PROGRESS_KEY, JSON.stringify(payload));
+    } catch (e) {}
+  }
+
+  function applyUnlocksFromState() {
+    gamesData.forEach((g, index) => {
+      const shouldBeUnlocked = index === 0 || state.unlockedGames.has(g.id);
+      g.locked = !shouldBeUnlocked;
+    });
+  }
+
+  function loadProgress() {
+    try {
+      const raw = localStorage.getItem(PROGRESS_KEY);
+      if (!raw) return;
+
+      const p = JSON.parse(raw);
+
+      if (typeof p.totalStars === "number") state.totalStars = p.totalStars;
+
+      if (Array.isArray(p.unlockedGames) && p.unlockedGames.length) {
+        state.unlockedGames = new Set(p.unlockedGames.map(Number));
+      }
+
+      if (typeof p.currentGameId === "number") state.currentGameId = p.currentGameId;
+      if (typeof p.currentStage === "number") state.currentStage = p.currentStage;
+      if (typeof p.hearts === "number") state.hearts = p.hearts;
+      if (typeof p.gameStars === "number") state.gameStars = p.gameStars;
+
+      applyUnlocksFromState();
+    } catch (e) {}
+  }
+
+
+  
   // المنت‌ها
   const gamesGrid = document.getElementById("gamesGrid");
   const gamesScreen = document.getElementById("gamesScreen");
@@ -1321,6 +1370,8 @@
     try {
       const savedName = localStorage.getItem(USER_KEY);
       const savedAvatar = localStorage.getItem(AVATAR_KEY);
+     
+      
       if (savedName) {
         state.userName = savedName;
         userNameEl.textContent = savedName;
@@ -1332,6 +1383,11 @@
         selectedAvatarUrl = avatarButtons[0]?.dataset.avatar || selectedAvatarUrl;
         playerAvatarEl.src = selectedAvatarUrl;
       }
+
+loadProgress();
+      updateGlobalStats();
+
+      
       if (!savedName) {
         showOnboarding();
       }
@@ -1385,7 +1441,7 @@
     state.currentStage = 0;
     state.hearts = 3;
     state.gameStars = 0;
-
+saveProgress();
     gameTitleEl.textContent = game.title;
     gameSubtitleEl.textContent = game.subtitle;
 
@@ -1470,6 +1526,7 @@ updateBackButtonUI();
     });
 
     startTimerForStage(game);
+    saveProgress();
   }
 
   // ---- پاسخ کاربر ----
@@ -1517,6 +1574,8 @@ updateBackButtonUI();
         } else {
           updateGameUi();
         }
+        saveProgress();
+        
         updateGlobalStats();
         answeringLocked = false;
       }, 700);
@@ -1543,6 +1602,7 @@ updateBackButtonUI();
         } else {
           updateGameUi();
         }
+        saveProgress();
         updateGlobalStats();
         answeringLocked = false;
       }, 700);
@@ -1553,6 +1613,7 @@ updateBackButtonUI();
     if (answeringLocked) return;
     answeringLocked = true;
     state.hearts -= 1;
+    saveProgress();
     pulse(heartStatEl, "shake");
 
     // مربی: حالت اتمام زمان
@@ -1591,6 +1652,7 @@ updateBackButtonUI();
     // وقتی از اول شروع می‌کند، مربی دوباره حالت start بگیرد
     setCoachState("start");
     updateGameUi();
+    saveProgress();
   }
 
   function unlockNextGame() {
@@ -1600,6 +1662,7 @@ updateBackButtonUI();
       if (nextGame) {
         nextGame.locked = false;
         state.unlockedGames.add(nextGame.id);
+        saveProgress();
       }
       renderGamesList();
     }
@@ -1627,6 +1690,7 @@ updateBackButtonUI();
 
     updateGlobalStats();
     backToList();
+    saveProgress();
   }
 
   // ---- برگشت به فهرست ----
@@ -1639,6 +1703,7 @@ updateBackButtonUI();
     currentStageLabel.textContent = "-";
     renderGamesList();
 updateBackButtonUI();
+    saveProgress();
   }
   backToListBtn.addEventListener("click", backToList);
 
