@@ -664,6 +664,21 @@
       color: #fff;
       cursor: pointer;
     }
+
+.ad-wrap {
+  padding: 0 12px;
+  margin: 12px 0;
+}
+
+.wordgame-ad {
+  width: 100%;
+  display: block;
+  border-radius: 16px;
+  cursor: pointer;
+}
+
+
+    
   </style>
 </head>
 <body>
@@ -712,14 +727,17 @@
 
   <!-- فهرست بازی‌ها -->
   <div class="card" id="gamesScreen">
-<!-- تبلیغ بالای کارت‌ها -->
-<img
-  src="https://cdnfa.com/irangiah/a9be/uploads/ads/tankads.webp"
-  class="wordgame-ad"
-  alt="تبلیغ"
-  onclick="openAdLink()"
-/>
 
+<!-- تبلیغ بالای کارت‌ها -->
+<div class="ad-wrap">
+  <img
+    src="https://cdnfa.com/irangiah/a9be/uploads/ads/tankads.webp"
+    class="wordgame-ad"
+    alt="تبلیغ"
+    onclick="openAdLink()"
+  />
+</div>
+    
 <div class="games-grid" id="gamesGrid"></div>
   </div>
 
@@ -777,26 +795,33 @@
   </div>
 
 
-<!-- تبلیغ زیر بازی -->
-<img
-  src="https://cdnfa.com/irangiah/a9be/uploads/ads/tankads.webp"
-  class="wordgame-ad"
-  alt="تبلیغ"
-  onclick="openAdLink()"
-/>
 
 
   
   <!-- فوتر -->
-  <footer>
-    <div class="footer-row">
-      <button class="restart-btn" id="restartBtn">شروع مجدد بازی</button>
-      <div>
-        این برنامه توسط طاویتا ساخته شده.
-    <a href="https://eitaa.com/tavita" target="_blank">کانال طاویتا</a>
-      </div>
+
+<footer>
+
+  <!-- تبلیغ زیر بازی -->
+  <div class="ad-wrap">
+    <img
+      src="https://cdnfa.com/irangiah/a9be/uploads/ads/tankads.webp"
+      class="wordgame-ad"
+      alt="تبلیغ"
+      onclick="openAdLink()"
+    />
+  </div>
+
+  <div class="footer-row">
+    <button class="restart-btn" id="restartBtn">شروع مجدد بازی</button>
+    <div>
+      این برنامه توسط طاویتا ساخته شده ·
+      <span class="footer-link" onclick="openTavitaChannel()">کانال طاویتا</span>
     </div>
-  </footer>
+  </div>
+
+</footer>
+  
 </div>
 
 <!-- پاپ‌آپ‌ها -->
@@ -846,6 +871,17 @@
 
   
 <script>
+
+const AD_LINK = "https://eitaa.com/tavita_ads";
+
+function openAdLink() {
+  if (window.Eitaa && window.Eitaa.WebApp && window.Eitaa.WebApp.openEitaaLink) {
+    window.Eitaa.WebApp.openEitaaLink(AD_LINK);
+  } else {
+    window.location.href = AD_LINK;
+  }
+}
+  
   // -------- داده‌های بازی‌ها --------
   const gamesData = [
     {
